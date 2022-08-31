@@ -1,6 +1,6 @@
-<ion-content [fullscreen]="true">
+<ion-content color="warning" [fullscreen]="true">
 
-  <ion-toolbar color="success">
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-menu-button *ngIF="!menu"></ion-menu-button>
       <ion-back-button defaultHref="/home"></ion-back-button>
@@ -20,7 +20,7 @@
   <ion-row class="ion-padding-horizontal">
     <ion-col size="6">
       <ion-item lines="none" class="ion-text-center">
-        <ion-icon name="checkmark-circle" color="primary"></ion-icon>
+        <ion-icon name="checkmark-circle" color="warning"></ion-icon>
         <ion-label>
           21
           <p>Asistidas</p>
@@ -37,9 +37,8 @@
       </ion-item>
     </ion-col>
   </ion-row>
-
-  <ion-list>
-    <ion-item>
+  <ion-list >
+    <ion-item >
       <ion-label>
         <ion-text>Nombre</ion-text>
         <p><ion-text color="dark">Anibal Aaron Perez Muñoz</ion-text></p>
@@ -64,6 +63,6 @@
       </ion-label>
     </ion-item>
   </ion-list>
-  <ion-button class="boton-camara"><ion-icon name="camera-outline"></ion-icon></ion-button>
+  <ion-button class="boton-camara" color="primary"><ion-icon name="camera-outline"></ion-icon></ion-button>
 </ion-content>
 
