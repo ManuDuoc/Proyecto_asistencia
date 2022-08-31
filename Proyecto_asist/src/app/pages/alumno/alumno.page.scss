@@ -2,8 +2,17 @@
     text-align: center;
 }
 .boton-camara{
-    position:absolute;
-    margin: 80px 0px 0px 135px;
+    position:relative;
+    margin-left: 111px;
+    margin-right: 111px;
+}
+
+ion-list{
+    background-color: #006583;
+}
+
+.item{
+    background-color: #006583;
 }
 
 ion-content{
@@ -27,6 +36,7 @@ ion-content{
             background: var(--ion-color-white);
             margin-bottom: 5px;
             border: 7px solid var(--ion-color-white);
+
             
         }
     }
@@ -40,7 +50,7 @@ ion-row{
             border: 0.1px solid var(--ion-color-dark);
             box-shadow: 2px var(--ion-color-dark);
             border-radius: 8px;
+            box-shadow: 0 0.2rem 0.3rem rgba(27, 27, 26, 0.89);
         }
     }
 }
-
