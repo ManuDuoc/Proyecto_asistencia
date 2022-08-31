@@ -15,5 +15,11 @@ export class MenuPage implements OnInit {
   ngOnInit() {
   }
 
+  option = {
+    slidesPerView: 1.5,
+    centeredSlides:true,
+    loop: true,
+    spaceBetween: 50,
+    autoplay:true,
+  }
 }
-

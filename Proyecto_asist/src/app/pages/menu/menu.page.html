@@ -1,5 +1,5 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
+<ion-header >
+  <ion-toolbar color="warning">
     <ion-buttons slot="start">
       <ion-menu-button autoHide="false"></ion-menu-button>
     </ion-buttons>
@@ -8,4 +8,49 @@
     </ion-title>
   </ion-toolbar>
 </ion-header>
+<ion-content>
+  <ion-slides [options]="option" class="ion-margin-top">
+    <ion-slide>
+      <ion-card>
+        <img src="/assets/img/slide1.jpg" alt="">
+      </ion-card>
+    </ion-slide>
+
+    <ion-slide>
+      <ion-card>
+        <img src="/assets/img/slide2.jpg" alt="">
+      </ion-card>
+    </ion-slide>
+
+    <ion-slide>
+      <ion-card>
+        <img src="/assets/img/slide3.jpg" alt="">
+      </ion-card>
+    </ion-slide>
+
+    <ion-slide>
+      <ion-card>
+        <img src="/assets/img/slide4.jpg" alt="">
+      </ion-card>
+    </ion-slide>
+
+  </ion-slides>
+  <div class="contenedor"><a href="">
+    <img src="/assets/img/qr.jpg" alt="">
+    <div class="centrado"><p>Codigo Qr</p></div>
+  </a>
+  <div class="a"></div>
+  <a href="">
+    <img src="/assets/img/asistencia.jpg" alt="">
+    <div class="centrado2"><p>Asistencia</p></div>
+  </a>
+  <div class="a"></div>
+  <a href="">
+    <img src="/assets/img/calendario.jpg" alt="">
+    <div class="centrado3"><p>Calendario</p></div>
+  </a>
+  </div>
+  
+  
+</ion-content>
 
