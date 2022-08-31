@@ -10,14 +10,14 @@
         <ion-icon name="mail-outline"></ion-icon>
         <ion-item >
           <ion-label position="floating">Correo Electronico</ion-label>
-          <ion-input type="email"></ion-input>
+          <ion-input type="email" [(ngModel)]="Usuario"></ion-input>
         </ion-item>
       </div>
       <div class="from-input">
         <ion-icon name="lock-closed-outline"></ion-icon>
         <ion-item>
           <ion-label position="floating">Contraseña</ion-label>
-          <ion-input type="password"></ion-input>
+          <ion-input type="password" [(ngModel)]="Password"></ion-input>
         </ion-item>
       </div>
     </div>
@@ -26,7 +26,7 @@
     <ion-row>
       <ion-col size="2"></ion-col>
       <ion-col>
-        <ion-button size="small" class="login-button" [routerLink]="['/menu']">Iniciar Sesión</ion-button>
+        <ion-button size="small" class="login-button" (click)="ingresar()">Iniciar Sesión</ion-button>
       </ion-col>
       <ion-col size="2"></ion-col>
     </ion-row>
