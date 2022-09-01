@@ -8,7 +8,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'perfil-profesor',
     pathMatch: 'full'
   },
   {
@@ -26,6 +26,14 @@ const routes: Routes = [
   {
     path: 'lista-alumnos',
     loadChildren: () => import('./pages/lista-alumnos/lista-alumnos.module').then( m => m.ListaAlumnosPageModule)
+  },
+  {
+    path: 'secciones',
+    loadChildren: () => import('./pages/secciones/secciones.module').then( m => m.SeccionesPageModule)
+  },
+  {
+    path: 'perfil-profesor',
+    loadChildren: () => import('./pages/perfil-profesor/perfil-profesor.module').then( m => m.PerfilProfesorPageModule)
   },
   {
     path: '**',
