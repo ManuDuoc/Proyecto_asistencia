@@ -8,7 +8,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'perfil-profesor',
+    redirectTo: 'antes-qr',
     pathMatch: 'full'
   },
   {
@@ -36,13 +36,13 @@ const routes: Routes = [
     loadChildren: () => import('./pages/perfil-profesor/perfil-profesor.module').then( m => m.PerfilProfesorPageModule)
   },
   {
-    path: '**',
-    loadChildren: () => import('./pages/not-found/not-found.module').then( m => m.NotFoundPageModule)
-  },  {
     path: 'antes-qr',
     loadChildren: () => import('./pages/antes-qr/antes-qr.module').then( m => m.AntesQrPageModule)
   },
-
+  {
+    path: '**',
+    loadChildren: () => import('./pages/not-found/not-found.module').then( m => m.NotFoundPageModule)
+  },
 
 ];
 
