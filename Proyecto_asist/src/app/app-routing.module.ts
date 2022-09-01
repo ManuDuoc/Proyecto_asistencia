@@ -24,9 +24,14 @@ const routes: Routes = [
     loadChildren: () => import('./pages/qr/qr.module').then( m => m.QrPageModule)
   },
   {
+    path: 'lista-alumnos',
+    loadChildren: () => import('./pages/lista-alumnos/lista-alumnos.module').then( m => m.ListaAlumnosPageModule)
+  },
+  {
     path: '**',
     loadChildren: () => import('./pages/not-found/not-found.module').then( m => m.NotFoundPageModule)
   },
+
 ];
 
 @NgModule({
