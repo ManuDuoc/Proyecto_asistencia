@@ -8,7 +8,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'antes-qr',
+    redirectTo: 'menu-alumno',
     pathMatch: 'full'
   },
   {
@@ -40,9 +40,14 @@ const routes: Routes = [
     loadChildren: () => import('./pages/antes-qr/antes-qr.module').then( m => m.AntesQrPageModule)
   },
   {
+    path: 'menu-alumno',
+    loadChildren: () => import('./pages/menu-alumno/menu-alumno.module').then( m => m.MenuAlumnoPageModule)
+  },
+  {
     path: '**',
     loadChildren: () => import('./pages/not-found/not-found.module').then( m => m.NotFoundPageModule)
   },
+
 
 ];
 

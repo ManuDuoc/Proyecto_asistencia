@@ -26,7 +26,7 @@ export class HomePage {
       let navigationExtras: NavigationExtras = {
         state: { textoEnviado: this.Usuario}
       }
-      this.router.navigate(['/alumno'], navigationExtras);}
+      this.router.navigate(['/menu-alumno'], navigationExtras);}
 
     else if(this.Usuario == this.Profesor && this.Password == this.contrasena){
       let NavigationExtras: NavigationExtras ={

@@ -7,6 +7,14 @@ ion-content{
 text-align: center;
 }
 
+.imagen{
+  position: absolute;
+  top: 14%;
+  max-width: 250px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 
 .login-section{
 height: 74vh;
