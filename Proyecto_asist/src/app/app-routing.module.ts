@@ -8,7 +8,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'horario',
+    redirectTo: 'home',
     pathMatch: 'full'
   },
   {
@@ -60,9 +60,14 @@ const routes: Routes = [
     loadChildren: () => import('./pages/horario/horario.module').then( m => m.HorarioPageModule)
   },
   {
+    path: 'registro',
+    loadChildren: () => import('./pages/registro/registro.module').then( m => m.RegistroPageModule)
+  },
+  {
     path: '**',
     loadChildren: () => import('./pages/not-found/not-found.module').then( m => m.NotFoundPageModule)
   },
+
 ];
 
 @NgModule({
