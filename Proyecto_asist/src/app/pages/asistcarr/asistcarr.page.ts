@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-asistcarr',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AsistcarrPage implements OnInit {
 
-  constructor() { }
+  constructor(private menu:MenuController) {this.menu.enable(false)}
 
   ngOnInit() {
   }

@@ -9,28 +9,28 @@ import { MenuController, ToastController } from '@ionic/angular';
 })
 export class HomePage {
 
-  Usuario: string;
-  Password: number;
+  email: string;
+  Password: string;
 
   Estudiante= "anib.perezm@duocuc.cl";
-  contra = 1234;
+  contra = "asdasd123123";
 
-  Profesor ="Man.collao@duocuc.cl";
-  contrasena=4321;
-
+  Profesor ="man.collao@duocuc.cl";
+  contrasena= "asdasd123123";
+  
   constructor(private menu: MenuController,public router: Router, public toastController: ToastController, public menuController : MenuController) {
     this.menu.enable(false);
   }
   ingresar(){
-    if(this.Usuario == this.Estudiante && this.Password == this.contra){
+    if(this.email == this.Estudiante && this.Password == this.contra){
       let navigationExtras: NavigationExtras = {
-        state: { textoEnviado: this.Usuario}
+        state: { textoEnviado: this.email}
       }
       this.router.navigate(['/menu-alumno'], navigationExtras);}
 
-    else if(this.Usuario == this.Profesor && this.Password == this.contrasena){
+    else if(this.email == this.Profesor && this.Password == this.contrasena){
       let NavigationExtras: NavigationExtras ={
-        state:{ textoEnviado: this.Usuario}
+        state:{ textoEnviado: this.email}
       }
       this.router.navigate(['/menu'])
     }
