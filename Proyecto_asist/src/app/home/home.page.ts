@@ -12,7 +12,7 @@ export class HomePage {
   Usuario: string;
   Password: number;
 
-  Estudiante= "Aaron";
+  Estudiante= "anib.perezm@duocuc.cl";
   contra = 1234;
 
   Profesor ="Manuel";
@@ -36,7 +36,7 @@ export class HomePage {
     }
 
     else{
-      this.presentToast("Usuario y/o Contraseña Incorrectos");
+      this.presentToast("Correo o Contraseña Incorrecta");
     }
   }
   async presentToast(message:string, duration?:number){

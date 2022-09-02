@@ -8,7 +8,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'menu-alumno',
+    redirectTo: 'recuperar',
     pathMatch: 'full'
   },
   {
@@ -42,6 +42,10 @@ const routes: Routes = [
   {
     path: 'menu-alumno',
     loadChildren: () => import('./pages/menu-alumno/menu-alumno.module').then( m => m.MenuAlumnoPageModule)
+  },
+  {
+    path: 'recuperar',
+    loadChildren: () => import('./pages/recuperar/recuperar.module').then( m => m.RecuperarPageModule)
   },
   {
     path: '**',
