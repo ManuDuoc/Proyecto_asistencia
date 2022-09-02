@@ -52,13 +52,14 @@ const routes: Routes = [
     loadChildren: () => import('./pages/asistencia/asistencia.module').then( m => m.AsistenciaPageModule)
   },
   {
+    path: 'asistcarr',
+    loadChildren: () => import('./pages/asistcarr/asistcarr.module').then( m => m.AsistcarrPageModule)
+  },
+  {
     path: '**',
     loadChildren: () => import('./pages/not-found/not-found.module').then( m => m.NotFoundPageModule)
   },
   
-
-
-
 ];
 
 @NgModule({

@@ -15,7 +15,7 @@ export class HomePage {
   Estudiante= "anib.perezm@duocuc.cl";
   contra = 1234;
 
-  Profesor ="Manuel";
+  Profesor ="Man.collao@duocuc.cl";
   contrasena=4321;
 
   constructor(private menu: MenuController,public router: Router, public toastController: ToastController, public menuController : MenuController) {
