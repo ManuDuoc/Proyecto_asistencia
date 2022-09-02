@@ -8,7 +8,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'recuperar',
+    redirectTo: 'horario',
     pathMatch: 'full'
   },
   {
@@ -56,10 +56,13 @@ const routes: Routes = [
     loadChildren: () => import('./pages/asistcarr/asistcarr.module').then( m => m.AsistcarrPageModule)
   },
   {
+    path: 'horario',
+    loadChildren: () => import('./pages/horario/horario.module').then( m => m.HorarioPageModule)
+  },
+  {
     path: '**',
     loadChildren: () => import('./pages/not-found/not-found.module').then( m => m.NotFoundPageModule)
   },
-  
 ];
 
 @NgModule({
