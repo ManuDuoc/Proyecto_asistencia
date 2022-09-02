@@ -1,13 +1,18 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
     <ion-title>Recuperar contraseña</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-item>
-    <ion-label position="floating">Ingresa tu correo electronico</ion-label>
+<ion-content color="warning">
+  <ion-item color="warning">
+    <ion-label color="primary" position="floating">Ingresa tu correo electronico</ion-label>
     <ion-input></ion-input>
   </ion-item>
-  <ion-button class="boton-camara" color="primary">Secondary</ion-button>
+  <div class="contenedor">
+    <ion-button class="boton-camara" color="primary" (click)="enviar()">Enviar</ion-button>
+  </div>
 </ion-content>
