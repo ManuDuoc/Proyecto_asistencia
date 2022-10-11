@@ -8,7 +8,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'codigo-qr',
+    redirectTo: 'home',
     pathMatch: 'full'
   },
   {
