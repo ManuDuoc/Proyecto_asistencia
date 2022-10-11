@@ -8,7 +8,7 @@ import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
 })
 export class CodigoQRPage implements OnInit, OnDestroy {
 
-  qrCodeString = 'This is a secret qr code message';
+  qrCodeString = 'HAZ QUEDADO PRESENTE';
   scannedResult: any;
   content_visibility = 'hidden';
 
