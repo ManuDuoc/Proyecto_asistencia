@@ -8,11 +8,12 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { QRCodeModule } from 'angularx-qrcode';
+import { SQLite } from '@ionic-native/sqlite/ngx';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, BrowserAnimationsModule, QRCodeModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy}],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy}, SQLite],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

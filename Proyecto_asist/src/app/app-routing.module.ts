@@ -8,7 +8,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'codigo-qr',
+    redirectTo: 'agregar-usuario',
     pathMatch: 'full'
   },
   {
@@ -68,9 +68,15 @@ const routes: Routes = [
     loadChildren: () => import('./pages/codigo-qr/codigo-qr.module').then( m => m.CodigoQRPageModule)
   },
   {
+    path: 'agregar-usuario',
+    loadChildren: () => import('./pages/agregar-usuario/agregar-usuario.module').then( m => m.AgregarUsuarioPageModule)
+  },
+  {
     path: '**',
     loadChildren: () => import('./pages/not-found/not-found.module').then( m => m.NotFoundPageModule)
   }
+  
+
 
 ];
 
