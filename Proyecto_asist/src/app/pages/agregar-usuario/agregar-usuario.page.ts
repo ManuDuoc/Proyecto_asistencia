@@ -10,14 +10,15 @@ import { DbService } from 'src/app/services/db.service';
 export class AgregarUsuarioPage implements OnInit {
   correoUsuario: "";
   claveUsuario= "";
-
+  nombreUsuario="";
+  rolUsuario="";
   constructor(private router: Router, private servicio: DbService) { }
 
   ngOnInit() {
   }
 
   agregar(){
-    this.servicio.registrarUsuario(this.correoUsuario,this.claveUsuario);
+    this.servicio.registrarUsuario(this.correoUsuario,this.claveUsuario,this.nombreUsuario,this.rolUsuario);
     this.servicio.presentAlert("Usuario Registrado");
     this.router.navigate(['/home']);
   }

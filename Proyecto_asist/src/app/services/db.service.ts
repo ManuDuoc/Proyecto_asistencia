@@ -3,14 +3,21 @@ import { AlertController, Platform } from '@ionic/angular';
 import { SQLite,SQLiteObject } from '@ionic-native/sqlite/ngx'; 
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Usuarios } from './usuarios';
+import { Ramos } from './ramos';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DbService {
   //variable para la sentencia de creacion de tablas
-  Usuario: string = "CREATE TABLE IF NOT EXISTS usuario(id_usuario INTEGER PRIMARY KEY autoincrement, correo VARCHAR(30) NOT NULL, clave TEXT NOT NULL);";
-  registroUsuario: string = "INSERT or IGNORE INTO usuario(id_usuario,correo,clave) VALUES (1,'yz.baez@duocuc.cl','123456');";
+  Usuario: string = "CREATE TABLE IF NOT EXISTS usuario(id_usuario INTEGER PRIMARY KEY autoincrement, correo VARCHAR(30) NOT NULL, clave TEXT NOT NULL, nombre VARCHAR(30) NOT NULL , rol INTEGER NOT NULL);";
+  Ramo: string = "CREATE TABLE IF NOT EXISTS ramo(id_ramo INTEGER PRIMARY KEY autoincrement, sigla VARCHAR(30) NOT NULL, nombre VARCHAR(30) NOT NULL);";
+  registroUsuario: string = "INSERT or IGNORE INTO usuario(id_usuario,correo,clave,nombre,rol) VALUES (1,'v.rosendo@duocuc.cl','J.12mm8','v.rosendo',1);";
+  registroUsuario2: string = "INSERT or IGNORE INTO usuario(id_usuario,correo,clave,nombre,rol) VALUES (2,'j.baez@duocuc.cl','B.34vf8','j.baez',2);";
+  registroUsuario3: string = "INSERT or IGNORE INTO usuario(id_usuario,correo,clave,nombre,rol) VALUES (3,'a.diaz@duocuc.cl','C.54yt78','a.diaz',2);";
+  //Insertar ramos
+  registroRamo: string = "INSERT or IGNORE INTO ramo(id_ramo,sigla,nombre) VALUES (1,'PGY4237','Diseño de prototipos');";
+  registroRamo2: string = "INSERT or IGNORE INTO ramo(id_ramo,sigla,nombre) VALUES (2,'PGY4121','Programación de aplicaciones móviles');";
   
 
   //variable que manipule la conexion a BD
@@ -18,6 +25,7 @@ export class DbService {
 
   //variables para observables
   listaUsuarios = new BehaviorSubject([]);
+  listaRamos = new BehaviorSubject([]);
   private isDBReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
 
@@ -56,9 +64,14 @@ export class DbService {
     try {
       //ejecuto creacion de tablas
       await this.database.executeSql(this.Usuario, []);
+      await this.database.executeSql(this.Ramo, []);
 
       //ejecuto los insert
       await this.database.executeSql(this.registroUsuario, []);
+      await this.database.executeSql(this.registroUsuario2, []);
+      await this.database.executeSql(this.registroUsuario3, []);
+      await this.database.executeSql(this.registroRamo, []);
+      await this.database.executeSql(this.registroRamo2, []);
 
       //llamo al observable de carga de datos
       this.buscarUsuarios();
@@ -77,6 +90,10 @@ export class DbService {
     return this.listaUsuarios.asObservable();
   }
 
+  fetchRamos(): Observable<Usuarios[]> {
+    return this.listaRamos.asObservable();
+  }
+
   buscarUsuarios() {
     //ejecuto la consulta
     return this.database.executeSql('SELECT * FROM usuario', []).then(res => {
@@ -89,7 +106,9 @@ export class DbService {
           items.push({
             id: res.rows.item(i).id_usuario,
             correo: res.rows.item(i).correo,
-            clave: res.rows.item(i).clave
+            clave: res.rows.item(i).clave,
+            nombre: res.rows.item(i).nombre,
+            rol: res.rows.item(i).rol
           })
         }
       }
@@ -98,17 +117,40 @@ export class DbService {
 
     })
   }
-  registrarUsuario(correo, clave) {
-    let data = [correo, clave];
-    return this.database.executeSql('INSERT INTO usuario(correo,clave) VALUES (?,?)', data).then(data2 => {
+
+  buscarRamos() {
+    //ejecuto la consulta
+    return this.database.executeSql('SELECT * FROM ramo', []).then(res => {
+      //creo el arreglo para los registros
+      let items: Ramos[] = [];
+      //si existen filas
+      if (res.rows.length > 0) {
+        //recorro el cursor y lo agrego al arreglo
+        for (var i = 0; i < res.rows.length; i++) {
+          items.push({
+            id_ramo: res.rows.item(i).id_ramo,
+            sigla: res.rows.item(i).sigla,
+            nombre: res.rows.item(i).nombre,
+          })
+        }
+      }
+      //actualizo el observable
+      this.listaRamos.next(items);
+
+    })
+  }
+
+  registrarUsuario(correo, clave, nombre, rol) {
+    let data = [correo, clave, nombre, rol];
+    return this.database.executeSql('INSERT INTO usuario(correo,clave,nombre,rol) VALUES (?,?,?,?)', data).then(data2 => {
       this.buscarUsuarios();
       this.presentAlert("Registro Realizado");
     })
   }
 
-  modificarUsuario(id, correo, clave) {
-    let data = [correo, clave, id];
-    return this.database.executeSql('UPDATE usuario SET correo = ?, clave = ? WHERE id_usuario = ?', data).then(data2 => {
+  modificarUsuario(id, correo, clave, nombre, rol) {
+    let data = [nombre, correo, clave, id, rol];
+    return this.database.executeSql('UPDATE usuario SET correo = ?, clave = ?, nombre = ?, rol = ? WHERE id_usuario = ?', data).then(data2 => {
       this.buscarUsuarios();
       this.presentAlert("Registro Modificado");
     })
