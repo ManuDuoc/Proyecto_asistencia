@@ -10,12 +10,9 @@ import { Ramos } from './ramos';
 })
 export class DbService {
   //variable para la sentencia de creacion de tablas
-  Usuario: string = "CREATE TABLE IF NOT EXISTS usuario(id_usuario INTEGER PRIMARY KEY autoincrement, correo VARCHAR(30) NOT NULL, clave TEXT NOT NULL, nombre VARCHAR(30) NOT NULL , rol INTEGER NOT NULL);";
+  Usuario: string = "CREATE TABLE IF NOT EXISTS usuario(id INTEGER PRIMARY KEY autoincrement, nombre VARCHAR(30) NOT NULL, clave VARCHAR(30) NOT NULL , id_rol INTEGER NOT NULL);";
   Ramo: string = "CREATE TABLE IF NOT EXISTS ramo(id_ramo INTEGER PRIMARY KEY autoincrement, sigla VARCHAR(30) NOT NULL, nombre VARCHAR(30) NOT NULL);";
-  registroUsuario: string = "INSERT or IGNORE INTO usuario(id_usuario,correo,clave,nombre,rol) VALUES (1,'v.rosendo@duocuc.cl','J.12mm8','v.rosendo',1);";
-  registroUsuario2: string = "INSERT or IGNORE INTO usuario(id_usuario,correo,clave,nombre,rol) VALUES (2,'j.baez@duocuc.cl','B.34vf8','j.baez',2);";
-  registroUsuario3: string = "INSERT or IGNORE INTO usuario(id_usuario,correo,clave,nombre,rol) VALUES (3,'a.diaz@duocuc.cl','C.54yt78','a.diaz',2);";
-  //Insertar ramos
+  registroUsuario: string = "INSERT or IGNORE INTO usuario(id,nombre,clave,id_rol) VALUES (1,'v.rosendo','J.12mm8',1);";
   registroRamo: string = "INSERT or IGNORE INTO ramo(id_ramo,sigla,nombre) VALUES (1,'PGY4237','Diseño de prototipos');";
   registroRamo2: string = "INSERT or IGNORE INTO ramo(id_ramo,sigla,nombre) VALUES (2,'PGY4121','Programación de aplicaciones móviles');";
   
@@ -68,8 +65,6 @@ export class DbService {
 
       //ejecuto los insert
       await this.database.executeSql(this.registroUsuario, []);
-      await this.database.executeSql(this.registroUsuario2, []);
-      await this.database.executeSql(this.registroUsuario3, []);
       await this.database.executeSql(this.registroRamo, []);
       await this.database.executeSql(this.registroRamo2, []);
 
@@ -94,6 +89,9 @@ export class DbService {
     return this.listaRamos.asObservable();
   }
 
+
+
+  inicoSesion(){}
   buscarUsuarios() {
     //ejecuto la consulta
     return this.database.executeSql('SELECT * FROM usuario', []).then(res => {
@@ -104,11 +102,10 @@ export class DbService {
         //recorro el cursor y lo agrego al arreglo
         for (var i = 0; i < res.rows.length; i++) {
           items.push({
-            id: res.rows.item(i).id_usuario,
-            correo: res.rows.item(i).correo,
-            clave: res.rows.item(i).clave,
+            id: res.rows.item(i).id,
             nombre: res.rows.item(i).nombre,
-            rol: res.rows.item(i).rol
+            clave: res.rows.item(i).clave,
+            id_rol: res.rows.item(i).id_rol
           })
         }
       }
@@ -140,17 +137,17 @@ export class DbService {
     })
   }
 
-  registrarUsuario(correo, clave, nombre, rol) {
-    let data = [correo, clave, nombre, rol];
-    return this.database.executeSql('INSERT INTO usuario(correo,clave,nombre,rol) VALUES (?,?,?,?)', data).then(data2 => {
+  registrarUsuario(id, nombre, clave, id_rol) {
+    let data = [id, nombre, clave, id_rol];
+    return this.database.executeSql('INSERT INTO usuario(id,nombre,clave,id_rol) VALUES (?,?,?,?)', data).then(data2 => {
       this.buscarUsuarios();
       this.presentAlert("Registro Realizado");
     })
   }
 
-  modificarUsuario(id, correo, clave, nombre, rol) {
-    let data = [nombre, correo, clave, id, rol];
-    return this.database.executeSql('UPDATE usuario SET correo = ?, clave = ?, nombre = ?, rol = ? WHERE id_usuario = ?', data).then(data2 => {
+  modificarUsuario(id, nombre,clave,  id_rol) {
+    let data = [id, nombre, clave, id_rol];
+    return this.database.executeSql('UPDATE usuario SET nombre = ?, clave = ?,  id_rol = ? WHERE id = ?', data).then(data2 => {
       this.buscarUsuarios();
       this.presentAlert("Registro Modificado");
     })
@@ -158,7 +155,7 @@ export class DbService {
   }
 
   eliminarUsuario(id){
-    return this.database.executeSql('DELETE FROM usuario WHERE id_usuario = ?',[id]).then(data2=>{
+    return this.database.executeSql('DELETE FROM usuario WHERE id = ?',[id]).then(data2=>{
       this.buscarUsuarios();
       this.presentAlert("Registro Eliminado");
     })
