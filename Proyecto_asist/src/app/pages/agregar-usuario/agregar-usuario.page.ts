@@ -8,10 +8,10 @@ import { DbService } from 'src/app/services/db.service';
   styleUrls: ['./agregar-usuario.page.scss'],
 })
 export class AgregarUsuarioPage implements OnInit {
+  idUsuario="";
   claveUsuario= "";
   nombreUsuario="";
   rolUsuario="";
-  idUsuario="";
   constructor(private router: Router, private servicio: DbService) { }
 
   ngOnInit() {

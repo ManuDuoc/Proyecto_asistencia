@@ -4,7 +4,7 @@ import { SQLite,SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Usuarios } from './usuarios';
 import { Ramos } from './ramos';
-
+import { NativeStorage } from '@awesome-cordova-plugins/native-storage/ngx';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,9 +12,6 @@ export class DbService {
   //variable para la sentencia de creacion de tablas
   Usuario: string = "CREATE TABLE IF NOT EXISTS usuario(id INTEGER PRIMARY KEY autoincrement, nombre VARCHAR(30) NOT NULL, clave VARCHAR(30) NOT NULL , id_rol INTEGER NOT NULL);";
   Ramo: string = "CREATE TABLE IF NOT EXISTS ramo(id_ramo INTEGER PRIMARY KEY autoincrement, sigla VARCHAR(30) NOT NULL, nombre VARCHAR(30) NOT NULL);";
-  registroUsuario: string = "INSERT or IGNORE INTO usuario(id,nombre,clave,id_rol) VALUES (1,'v.rosendo','J.12mm8',1);";
-  registroRamo: string = "INSERT or IGNORE INTO ramo(id_ramo,sigla,nombre) VALUES (1,'PGY4237','Diseño de prototipos');";
-  registroRamo2: string = "INSERT or IGNORE INTO ramo(id_ramo,sigla,nombre) VALUES (2,'PGY4121','Programación de aplicaciones móviles');";
   
 
   //variable que manipule la conexion a BD
@@ -26,7 +23,7 @@ export class DbService {
   private isDBReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
 
-  constructor(private sqlite: SQLite, private platform: Platform, private alertController: AlertController) {this.crearBD();}
+  constructor(private sqlite: SQLite, private platform: Platform, private alertController: AlertController,public nativeStorage: NativeStorage) {this.crearBD();}
   
   async presentAlert(msj: string) {
     const alert = await this.alertController.create({
@@ -64,9 +61,7 @@ export class DbService {
       await this.database.executeSql(this.Ramo, []);
 
       //ejecuto los insert
-      await this.database.executeSql(this.registroUsuario, []);
-      await this.database.executeSql(this.registroRamo, []);
-      await this.database.executeSql(this.registroRamo2, []);
+      
 
       //llamo al observable de carga de datos
       this.buscarUsuarios();
@@ -91,7 +86,63 @@ export class DbService {
 
 
 
-  inicoSesion(){}
+  inicoSesion(nombre,clave){
+    let data = [nombre, clave]; 
+    return this.database.executeSql('SELECT * from usuario WHERE nombre = ? and clave = ? and id_rol = 1' , data).then(res => {
+      let items: Usuarios[] = [];
+      //si existen filas
+      if (res.rows.length > 0) {
+        //recorro el cursor y lo agrego al arreglo
+        for (var i = 0; i < res.rows.length; i++) {
+          items.push({
+            id: res.rows.item(i).id,
+            nombre: res.rows.item(i).nombre,
+            clave: res.rows.item(i).clave,
+            id_rol: res.rows.item(i).id_rol
+          })
+        }
+        //actualizo el observable
+      this.nativeStorage.setItem('logeado',nombre)
+      this.nativeStorage.getItem('logeado')
+      
+      return true;
+      }
+      
+      
+      else{
+        return false;
+      }
+    })
+  }
+
+  inicoSesion2(nombre,clave){
+    let data = [nombre, clave]; 
+    return this.database.executeSql('SELECT * from usuario WHERE nombre = ? and clave = ? and id_rol = 2' , data).then(res => {
+      let items: Usuarios[] = [];
+      //si existen filas
+      if (res.rows.length > 0) {
+        //recorro el cursor y lo agrego al arreglo
+        for (var i = 0; i < res.rows.length; i++) {
+          items.push({
+            id: res.rows.item(i).id,
+            nombre: res.rows.item(i).nombre,
+            clave: res.rows.item(i).clave,
+            id_rol: res.rows.item(i).id_rol
+          })
+        }
+        //actualizo el observable
+      this.nativeStorage.setItem('logeado',nombre)
+      this.nativeStorage.getItem('logeado')
+      
+      return true;
+      }
+      
+      
+      else{
+        return false;
+      }
+    })
+  }
   buscarUsuarios() {
     //ejecuto la consulta
     return this.database.executeSql('SELECT * FROM usuario', []).then(res => {

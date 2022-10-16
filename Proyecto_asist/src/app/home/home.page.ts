@@ -20,38 +20,40 @@ export class HomePage {
   Estudiante= "anib.perezm@duocuc.cl";
   contra = "asdasd123123";
 
-  Profesor ="man.collao@duocuc.cl";
-  contrasena= "asdasd123123";
+  rol = 1;
+  rol_2 = 2;
   
+  Profesor ="v.rosendo";
+  contrasena= "J.12mm8";
+  
+  login: any = {
+    nombre:'',
+    clave:''
+  };
+
   constructor(private menu: MenuController,public router: Router, public toastController: ToastController, public menuController : MenuController,private api:ApiService,private servicio :DbService) {
     this.menu.enable(false);
   }
-  ingresar(){
-    if(this.email == this.Estudiante && this.Password == this.contra){
-      let navigationExtras: NavigationExtras = {
-        state: { textoEnviado: this.email}
-      }
-      this.router.navigate(['/menu-alumno'], navigationExtras);}
-
-    else if(this.email == this.Profesor && this.Password == this.contrasena){
-      let NavigationExtras: NavigationExtras ={
-        state:{ textoEnviado: this.email}
-      }
-      this.router.navigate(['/menu'])
+  User(){
+    let navigationExtras: NavigationExtras = {
+      state:{log0: this.login.nombre, log1:this.login.clave}
     }
-
-    else{
-      this.presentToast("Correo o Contraseña Incorrecta");
-    }
+    this.router.navigate(['/menu'], navigationExtras)
   }
-  async presentToast(message:string, duration?:number){
-    const toast = await this.toastController.create(
-      {
-        message:message,
-        duration:duration?duration:2000
-      }
-    );
-    toast.present();
+
+  User2(){
+    let navigationExtras: NavigationExtras = {
+      state:{log0: this.login.nombre, log1:this.login.clave}
+    }
+    this.router.navigate(['/menu-alumno'], navigationExtras)
+  }
+
+  async ingresar(){
+    const response = await this.servicio.inicoSesion(this.login.nombre, this.login.clave)
+    response ? this.User(): this.servicio.presentAlert("Credenciales incorrectar Compruebe su nombre y/o contraseña")
+    const response2 = await this.servicio.inicoSesion2(this.login.nombre, this.login.clave)
+    response2 ? this.User2(): this.login.nombre
+    
   }
 
   ngOnInit(){
