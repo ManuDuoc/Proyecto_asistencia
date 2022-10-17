@@ -1,0 +1,36 @@
+.contenedor{
+    width: 80%;
+    margin: auto !important;
+}
+.contenedor img{
+    margin-top: 80px;
+}
+
+.cont{
+    width: 80%;
+    margin: auto !important;
+    background: white;
+    margin-top: 10px !important;
+    padding: 1px;
+    border-radius: 3px;
+    box-shadow: 0 0.1rem 0.2rem rgba(27, 27, 26, 0.89);
+    .but{
+        width: 80%;
+        margin: auto !important;
+        background: white;
+        button{
+            width: 100%;
+            margin-top: 10px;
+        }
+    }
+}
+ion-select{
+    background: rgb(119, 119, 121);
+    width: 80%;
+    margin: auto;
+    margin-top: 10px;
+    height: 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    text-align: center;
+}

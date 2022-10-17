@@ -1,4 +1,4 @@
-<ion-header >
+<ion-header [style.visibility]="content_visibility">
   <ion-toolbar color="warning">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home"></ion-back-button>
@@ -11,7 +11,7 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-<ion-content>
+<ion-content [style.visibility]="content_visibility">
   <div class="contenedor"><a href="">
     <img src="/assets/img/asistencia2.jpg" [routerLink]="'/asistcarr'">
     <div class="centrado"><p>Asistencia</p></div>
@@ -22,10 +22,17 @@
     <div class="centrado2"><p>Horario</p></div>
   </a>
   <div class="a"></div>
-  <a href="">
-    <img src="/assets/img/qr1.jpg" [routerLink]="'/codigo-qr'" alt="">
-    <div class="centrado3"><p>Leer QR</p></div>
-  </a>
+  <ion-button color="warning"
+    expand="block"
+    class="ion-margin" 
+    (click)="startScan()" style="margin-right: 60px; margin-left: 60px;">
+    Leer QR 
+  </ion-button>
+  <div class="a"></div>
+  <ion-item *ngIf="scannedResult" color="warning">
+    <ion-label
+    class="ion-text-wrap">Mensaje: {{scannedResult}}</ion-label>
+  </ion-item>
   <div class="a"></div>
   
   </div>

@@ -13,7 +13,6 @@ export class PerfilProfesorPage implements OnInit {
   imageData: any;
   constructor(private c: CamaraService, public alertController: AlertController, private api:ApiService,private servicio :DbService){}
   
-  name= 'manuel collao';
 
   tomarF(){
     this.c.takePicture();

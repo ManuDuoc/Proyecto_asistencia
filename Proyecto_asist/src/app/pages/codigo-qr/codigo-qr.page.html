@@ -1,31 +1,34 @@
 <ion-header [style.visibility]="content_visibility">
   <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/menu"></ion-back-button>
+    </ion-buttons>
     <ion-title>codigo QR</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [style.visibility]="content_visibility">
-
-  <ion-card class="ion-text-center">
-    <ion-card-content>
-      <qrcode 
-        [qrdata]="qrCodeString" 
-        [width]="200" 
-        [errorCorrectionLevel]="'M'">
-      </qrcode>
-    </ion-card-content>
-  </ion-card>
-
-  <ion-button
-    expand="block"
-    class="ion-margin" 
-    (click)="startScan()">
-    Scan QR Code
-  </ion-button>
-
-  <ion-item *ngIf="scannedResult">
-    <ion-label
-    class="ion-text-wrap">Mensaje: {{scannedResult}}</ion-label>
-  </ion-item>
+<ion-content [style.visibility]="content_visibility" color="warning">
+  <div class="cont">
+    <ion-select placeholder="Seleccione el dia" [(ngModel)]="seccion">
+      <ion-select-option *ngFor="let a of Dia" [value]="a.dia">{{a.Dia}}</ion-select-option>
+    </ion-select>
+    <ion-select placeholder="Seleccione la Sección" [(ngModel)]="seccion">
+      <ion-select-option *ngFor="let a of Seccion" [value]="a.seccion">{{a.Seccion}}</ion-select-option>
+    </ion-select>
+    <div class="but">
+    <button (click) ="toggleDisplay()">Generar Qr</button>
+  </div>
+  </div>
+  <div [hidden]="isDisplay" class="contenedor">
+    <ion-card color="primary" style="margin-top: 50px;" class="ion-text-center">
+      <ion-card-content>
+        <qrcode 
+          [qrdata]="qrCodeString" 
+          [width]="200" 
+          [errorCorrectionLevel]="'M'">
+        </qrcode>
+      </ion-card-content>
+    </ion-card>
+  </div>
 
 </ion-content>
