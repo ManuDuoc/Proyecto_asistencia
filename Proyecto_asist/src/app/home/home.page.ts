@@ -3,6 +3,7 @@ import { NavigationExtras, Router } from '@angular/router';
 import { MenuController, ToastController } from '@ionic/angular';
 import { ApiService } from '../services/api.service';
 import { DbService } from 'src/app/services/db.service';
+import { NativeStorage } from '@awesome-cordova-plugins/native-storage/ngx';
 
 @Component({
   selector: 'app-home',
@@ -31,7 +32,7 @@ export class HomePage {
     clave:''
   };
 
-  constructor(private menu: MenuController,public router: Router, public toastController: ToastController, public menuController : MenuController,private api:ApiService,private servicio :DbService) {
+  constructor(private menu: MenuController,public router: Router, public toastController: ToastController, public menuController : MenuController,private api:ApiService,private servicio :DbService,public NativeStorage: NativeStorage) {
     this.menu.enable(false);
   }
   User(){
@@ -50,7 +51,7 @@ export class HomePage {
 
   async ingresar(){
     const response = await this.servicio.inicoSesion(this.login.nombre, this.login.clave)
-    response ? this.User(): this.servicio.presentAlert("Credenciales incorrectar Compruebe su nombre y/o contraseña")
+    response ? this.User(): this.login.nombre
     const response2 = await this.servicio.inicoSesion2(this.login.nombre, this.login.clave)
     response2 ? this.User2(): this.login.nombre
     

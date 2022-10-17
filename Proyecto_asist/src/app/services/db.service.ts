@@ -8,6 +8,7 @@ import { NativeStorage } from '@awesome-cordova-plugins/native-storage/ngx';
 import { Asistencia } from './asistencia';
 import { Seccion } from './seccion';
 import { Listado } from './listado';
+import { Perfil } from './perfil';
 @Injectable({
   providedIn: 'root'
 })
@@ -18,6 +19,7 @@ export class DbService {
   Seccion: string = "CREATE TABLE IF NOT EXISTS seccion(id INTEGER PRIMARY KEY autoincrement, sigla VARCHAR(30) NOT NULL);";
   Asistencia: string = "CREATE TABLE IF NOT EXISTS asistencia(id INTEGER PRIMARY KEY autoincrement, id_ramo INTEGER NOT NULL, id_seccion INTEGER  NOT NULL,id_profesor INTEGER NOT NULL);";
   Listado: string = "CREATE TABLE IF NOT EXISTS listado(id INTEGER PRIMARY KEY autoincrement, id_estudiante INTEGER NOT NULL, id_asigsecci INTEGER  NOT NULL);";
+  Perfil: string = "CREATE TABLE IF NOT EXISTS perfil(id_perfil INTEGER PRIMARY KEY autoincrement, nombre VARCHAR(30) NULL, apellido VARCHAR(30) NULL,edad INTEGER NULL,imagen VARCHAR(30) NULL,numero INTEGER NULL,correo VARCHAR(30) NULL,ciudad VARCHAR(30) NULL, provincia VARCHAR(30) NULL);";
   //variable que manipule la conexion a BD
   public database: SQLiteObject;
 
@@ -27,6 +29,7 @@ export class DbService {
   listaSeccion = new BehaviorSubject([]);
   listaAsistencia = new BehaviorSubject([]);
   listaListado = new BehaviorSubject([]);
+  listaPerfil = new BehaviorSubject([]);
 
   private isDBReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
@@ -70,6 +73,7 @@ export class DbService {
       await this.database.executeSql(this.Seccion, []);
       await this.database.executeSql(this.Asistencia, []);
       await this.database.executeSql(this.Listado, []);
+      await this.database.executeSql(this.Perfil, []);
       //ejecuto los insert
       
 
@@ -104,6 +108,10 @@ export class DbService {
 
   fetchListados(): Observable<Listado[]> {
     return this.listaListado.asObservable();
+  }
+
+  fetchPerfiles(): Observable<Perfil[]> {
+    return this.listaPerfil.asObservable();
   }
 
 
@@ -276,6 +284,34 @@ export class DbService {
     })
   }
 
+  buscarPerfiles() {
+    //ejecuto la consulta
+    return this.database.executeSql('SELECT * FROM perfil', []).then(res => {
+      //creo el arreglo para los registros
+      let items: Perfil[] = [];
+      //si existen filas
+      if (res.rows.length > 0) {
+        //recorro el cursor y lo agrego al arreglo
+        for (var i = 0; i < res.rows.length; i++) {
+          items.push({
+            id_perfil: res.rows.item(i).id_perfil,
+            nombre: res.rows.item(i).nombre,
+            apellido: res.rows.item(i).apellido,
+            edad: res.rows.item(i).edad,
+            imagen: res.rows.item(i).imagen,
+            numero: res.rows.item(i).numero,
+            correo: res.rows.item(i).correo,
+            ciudad: res.rows.item(i).ciudad,
+            provincia: res.rows.item(i).provincia
+          })
+        }
+      }
+      //actualizo el observable
+      this.listaUsuarios.next(items);
+
+    })
+  }
+
   registrarUsuario(id, nombre, clave, id_rol) {
     let data = [id, nombre, clave, id_rol];
     return this.database.executeSql('INSERT INTO usuario(id,nombre,clave,id_rol) VALUES (?,?,?,?)', data).then(data2 => {
@@ -311,6 +347,21 @@ export class DbService {
       this.buscarListados();
     })
   }
+
+  registrarIdPerfil(id_perfil) {
+    let data = [id_perfil];
+    return this.database.executeSql('INSERT OR REPLACE INTO perfil(id_perfil) VALUES (?)', data).then(data2 => {
+      this.buscarPerfiles();
+    })
+  }
+
+  registrarFotoPerfil(id,imagen) {
+    let data = [id,imagen];
+    return this.database.executeSql('UPDATE perfil SET imagen = ? WHERE id = ?', data).then(data2 => {
+      this.buscarPerfiles();
+    })
+  }
+
 
   modificarUsuario(id, nombre,clave,  id_rol) {
     let data = [id, nombre, clave, id_rol];
