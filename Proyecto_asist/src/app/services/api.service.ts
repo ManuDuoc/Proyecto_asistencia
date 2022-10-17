@@ -22,6 +22,8 @@ export class ApiService {
   }
   // Se establece la base url del API a consumir
   apiURL = 'https://my-json-server.typicode.com/victorrosendo/repoUsuariosRamos';
+  apiURL2 = 'https://my-json-server.typicode.com/victorrosendo/repoSeccionAsigSeccion';
+  apiURL3 = 'https://my-json-server.typicode.com/victorrosendo/repoListadoAutos';
   // Se declara la variable http de tipo HttpClient
     constructor(private http:HttpClient) { }
 
@@ -30,6 +32,31 @@ getPosts():Observable<any>{
         retry(3), catchError(this.handleError)
     );
   }
+
+  getPost():Observable<any>{
+    return this.http.get(this.apiURL+'/ramos/').pipe(
+        retry(3), catchError(this.handleError)
+    );
+  }
+
+  getPost2():Observable<any>{
+    return this.http.get(this.apiURL2+'/seccion/').pipe(
+        retry(3), catchError(this.handleError)
+    );
+  }
+
+  getPost3():Observable<any>{
+    return this.http.get(this.apiURL2+'/asigsecci/').pipe(
+        retry(3), catchError(this.handleError)
+    );
+  }
+
+  getPost4():Observable<any>{
+    return this.http.get(this.apiURL3+'/listado/').pipe(
+        retry(3), catchError(this.handleError)
+    );
+  }
+
 
 
   private handleError(error: HttpErrorResponse) {

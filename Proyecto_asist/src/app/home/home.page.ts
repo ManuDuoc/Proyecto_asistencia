@@ -57,6 +57,59 @@ export class HomePage {
   }
 
   ngOnInit(){
+
+    this.api.getPost().subscribe((user2)=> {
+
+      this.user= user2;
+      for(var i = 0; i < user2.length; i++){
+        
+          this.servicio.registrarRamo(this.user[i].id,this.user[i].sigla,this.user[i].nombre);
+          this.servicio.presentAlert("Ramo Registrado");
+      }
+
+    },(error)=>{
+      console.log(error);
+    })
+
+    this.api.getPost2().subscribe((user2)=> {
+
+      this.user= user2;
+      for(var i = 0; i < user2.length; i++){
+        
+          this.servicio.registrarSeccion(this.user[i].id,this.user[i].sigla);
+          this.servicio.presentAlert("Sección Registrada");
+      }
+
+    },(error)=>{
+      console.log(error);
+    })
+
+    this.api.getPost3().subscribe((user2)=> {
+
+      this.user= user2;
+      for(var i = 0; i < user2.length; i++){
+        
+          this.servicio.registrarAsistencia(this.user[i].id,this.user[i].id_ramo,this.user[i].id_seccion,this.user[i].id_profesor);
+          this.servicio.presentAlert("Asistencia Registrada");
+      }
+
+    },(error)=>{
+      console.log(error);
+    })
+
+    this.api.getPost4().subscribe((user2)=> {
+
+      this.user= user2;
+      for(var i = 0; i < user2.length; i++){
+        
+          this.servicio.registrarListado(this.user[i].id,this.user[i].id_estudiante,this.user[i].id_asigsecci);
+          this.servicio.presentAlert("Listado Registrado");
+      }
+
+    },(error)=>{
+      console.log(error);
+    })
+
     this.api.getPosts().subscribe((user2)=> {
 
       this.user= user2;
@@ -69,5 +122,6 @@ export class HomePage {
     },(error)=>{
       console.log(error);
     })
+    
   }
 }
