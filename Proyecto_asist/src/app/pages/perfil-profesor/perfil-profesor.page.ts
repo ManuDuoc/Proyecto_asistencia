@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CamaraService } from 'src/app/services/camara.service';
+import { AlertController } from '@ionic/angular';
+import { ApiService } from 'src/app/services/api.service';
+import { DbService } from 'src/app/services/db.service';
 
 @Component({
   selector: 'app-perfil-profesor',
@@ -8,7 +11,9 @@ import { CamaraService } from 'src/app/services/camara.service';
 })
 export class PerfilProfesorPage implements OnInit {
   imageData: any;
-  constructor(private c: CamaraService) {}
+  constructor(private c: CamaraService, public alertController: AlertController, private api:ApiService,private servicio :DbService){}
+  
+  name= 'manuel collao';
 
   tomarF(){
     this.c.takePicture();
@@ -19,5 +24,49 @@ export class PerfilProfesorPage implements OnInit {
       this.imageData = res;
     })
 
+  }
+  async presentAlert() {
+    const alert = await this.alertController.create({
+      header: 'Editar ',
+      inputs: [
+        {
+          placeholder: 'Nombre',
+        },
+        {
+          type: 'email',
+          placeholder: 'Email',
+          attributes: {
+            maxlength: 25,
+          },
+        },
+        {
+          type: 'number',
+          placeholder: 'Edad',
+          min: 1,
+          max: 100,
+        },
+        {
+          type: 'number',
+          placeholder: 'Telefono',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Cambios eliminados')
+          }
+        },
+        {  
+          text: 'Guardar',
+          handler: () => {
+            console.log('Cambios Guardados')
+          }
+        }]
+    });
+
+    await alert.present();
   }
 }
