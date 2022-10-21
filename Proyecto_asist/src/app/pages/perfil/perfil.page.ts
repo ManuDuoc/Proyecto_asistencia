@@ -3,15 +3,21 @@ import { CamaraService } from 'src/app/services/camara.service';
 import { MenuController } from '@ionic/angular';
 import { NativeStorage } from '@awesome-cordova-plugins/native-storage/ngx';
 import { AlertController } from '@ionic/angular';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute,NavigationExtras } from '@angular/router';
 import { DbService } from 'src/app/services/db.service';
 
+
 @Component({
-  selector: 'app-alumno',
-  templateUrl: './alumno.page.html',
-  styleUrls: ['./alumno.page.scss'],
+  selector: 'app-perfil',
+  templateUrl: './perfil.page.html',
+  styleUrls: ['./perfil.page.scss'],
 })
-export class AlumnoPage implements OnInit {
+export class PerfilPage implements OnInit {
+  perfile: any = {
+    nombre:'',
+    email:'',
+    numero:''
+  };
   usuario: any[] = [];
   id: number;
   nombre: any;
@@ -38,7 +44,14 @@ export class AlumnoPage implements OnInit {
         this.id_rol= this.router.getCurrentNavigation().extras.state.rolEnviado;
       }
     })
-  }  
+  }
+
+
+  async ingresar(){
+    await this.servicio.registrarPerfil(this.id, this.perfile.nombre, this.perfile.email, this.perfile.numero)
+    
+  }
+  
   tomarF(){
     this.c.takePicture();
   }
@@ -70,36 +83,11 @@ export class AlumnoPage implements OnInit {
         this.clave = this.usuario[i].clave
         this.id_rol = this.usuario[i].id_rol
         this.servicio.registrarIdPerfil(this.usuario[i].id,this.usuario[i].id);
-        this.servicio.buscarPerfil(this.usuario[i].id);
+
       }
       }
     })
   });
-
-  this.servicio.dbState().subscribe((re) => {
-        if (re) {
-          this.servicio.fetchPerfiles().subscribe(async item => {
-            this.perfil = item;
-          })
-  
-  
-        }
-
-
-
-    this.nativeStorage.getItem('perfil').then((x)=>{
-      console.log("Bienvenido " + x)
-      for (let i = 0; i < this.perfil.length; i++) {
-      if(this.perfil[i].id_perfil == x){
-        this.id_perfil = this.perfil[i].id_perfil
-        this.apellido = this.perfil[i].apellido
-        this.numero = this.perfil[i].numero
-        this.correo = this.perfil[i].correo
-      }
-      }
-    })
-  });
-
   }
 }
 

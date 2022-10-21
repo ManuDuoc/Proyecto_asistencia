@@ -6,9 +6,7 @@
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button color="warning" shape="block" (click)="tomarF()" class="ass">
-        <ion-icon name="camera-outline"></ion-icon>
-      </ion-button>
+
     </ion-buttons>
   </ion-toolbar>
   <ion-grid class="main-header">
@@ -33,20 +31,19 @@
     <ion-item color="warning">
       <ion-label>
         <ion-text >Nombre</ion-text>
-        <p><ion-text color="primary">{{nombre}}</ion-text></p>
+        <ion-input minlength="2" maxlength="25" type="text" [(ngModel)]="perfile.nombre"></ion-input>
       </ion-label>
     </ion-item>
     <ion-item  color="warning">
       <ion-label>
         <ion-text>Email</ion-text>
-        <p><ion-text color="primary">{{id_perfil}}</ion-text></p>
+        <ion-input minlength="2" maxlength="25" type="email" [(ngModel)]="perfile.email"></ion-input>
       </ion-label>
     </ion-item>
     <ion-item  color="warning">
       <ion-label>
         <ion-text>Telefono</ion-text>
-        <p><ion-text color="primary">+569 97032434</ion-text></p>
-        <ion-icon [routerLink]="['/perfil']" slot="end" name="create"></ion-icon>
+        <ion-input minlength="2" maxlength="25" type="number" [(ngModel)]="perfile.numero"></ion-input>
       </ion-label>
     </ion-item>
   </ion-list>

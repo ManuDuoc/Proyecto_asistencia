@@ -1,5 +1,6 @@
 export class Perfil {
     id_perfil: Number;
+    id_usuario: Number;
     nombre : String;
     apellido: String;
     edad: Number;

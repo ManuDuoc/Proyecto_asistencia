@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AlertController, Platform } from '@ionic/angular';
 import { SQLite,SQLiteObject } from '@ionic-native/sqlite/ngx'; 
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Roles } from './roles';
 import { Usuarios } from './usuarios';
 import { Ramos } from './ramos';
 import { NativeStorage } from '@awesome-cordova-plugins/native-storage/ngx';
@@ -14,22 +15,29 @@ import { Perfil } from './perfil';
 })
 export class DbService {
   //variable para la sentencia de creacion de tablas
-  Usuario: string = "CREATE TABLE IF NOT EXISTS usuario(id INTEGER PRIMARY KEY autoincrement, nombre VARCHAR(30) NOT NULL, clave VARCHAR(30) NOT NULL , id_rol INTEGER NOT NULL);";
+  Rol : string = "CREATE TABLE IF NOT EXISTS rol(id INTEGER PRIMARY KEY autoincrement, nombre_rol VARCHAR(30) NOT NULL);";
+  Usuario: string = "CREATE TABLE IF NOT EXISTS usuario(id INTEGER PRIMARY KEY autoincrement, nombre VARCHAR(30) NOT NULL, clave VARCHAR(30) NOT NULL ,id_rol INTEGER NOT NULL , FOREIGN KEY(id_rol) REFERENCES rol(id) on delete cascade on update cascade);";
   Ramo: string = "CREATE TABLE IF NOT EXISTS ramo(id_ramo INTEGER PRIMARY KEY autoincrement, sigla VARCHAR(30) NOT NULL, nombre VARCHAR(30) NOT NULL);";
   Seccion: string = "CREATE TABLE IF NOT EXISTS seccion(id INTEGER PRIMARY KEY autoincrement, sigla VARCHAR(30) NOT NULL);";
-  Asistencia: string = "CREATE TABLE IF NOT EXISTS asistencia(id INTEGER PRIMARY KEY autoincrement, id_ramo INTEGER NOT NULL, id_seccion INTEGER  NOT NULL,id_profesor INTEGER NOT NULL);";
+  Asistencia: string = "CREATE TABLE IF NOT EXISTS asistencia(id INTEGER PRIMARY KEY autoincrement, id_ramo INTEGER NOT NULL, id_seccion INTEGER  NOT NULL,id_profesor INTEGER NOT NULL, FOREIGN KEY(id_ramo) REFERENCES ramo(id_ramo) on delete cascade on update cascade, FOREIGN KEY(id_seccion) REFERENCES seccion(id) on delete cascade on update cascade,FOREIGN KEY(id_profesor) REFERENCES rol(id) on delete cascade on update cascade);";
   Listado: string = "CREATE TABLE IF NOT EXISTS listado(id INTEGER PRIMARY KEY autoincrement, id_estudiante INTEGER NOT NULL, id_asigsecci INTEGER  NOT NULL);";
-  Perfil: string = "CREATE TABLE IF NOT EXISTS perfil(id_perfil INTEGER PRIMARY KEY autoincrement, nombre VARCHAR(30) NULL, apellido VARCHAR(30) NULL,edad INTEGER NULL,imagen VARCHAR(30) NULL,numero INTEGER NULL,correo VARCHAR(30) NULL,ciudad VARCHAR(30) NULL, provincia VARCHAR(30) NULL);";
+  Perfil: string = "CREATE TABLE IF NOT EXISTS perfil(id_perfil INTEGER PRIMARY KEY autoincrement,id_usuario INTEGER NULL,nombre VARCHAR(30) NULL, apellido VARCHAR(30) NULL,edad INTEGER NULL,imagen BLOB NULL,numero INTEGER NULL,correo VARCHAR(30) NULL,ciudad VARCHAR(30) NULL, provincia VARCHAR(30) NULL,FOREIGN KEY(id_usuario) REFERENCES usuario(id) on delete cascade on update cascade);";
+  
+  //insertar en la tabla rol
+  RolProfesor: string = "INSERT or IGNORE INTO rol(id,nombre_rol) VALUES (1,'Profesor');";
+  RolEstudiante: string = "INSERT or IGNORE INTO rol(id,nombre_rol) VALUES (2,'Estudiante');";
   //variable que manipule la conexion a BD
   public database: SQLiteObject;
 
   //variables para observables
+  listaRoles = new BehaviorSubject([]);
   listaUsuarios = new BehaviorSubject([]);
   listaRamos = new BehaviorSubject([]);
   listaSeccion = new BehaviorSubject([]);
   listaAsistencia = new BehaviorSubject([]);
   listaListado = new BehaviorSubject([]);
   listaPerfil = new BehaviorSubject([]);
+  
 
   private isDBReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
@@ -68,6 +76,9 @@ export class DbService {
   async crearTablas() {
     try {
       //ejecuto creacion de tablas
+      await this.database.executeSql(this.Rol, []);
+      await this.database.executeSql(this.RolProfesor, []);
+      await this.database.executeSql(this.RolEstudiante, []);
       await this.database.executeSql(this.Usuario, []);
       await this.database.executeSql(this.Ramo, []);
       await this.database.executeSql(this.Seccion, []);
@@ -88,6 +99,10 @@ export class DbService {
   }
   dbState() {
     return this.isDBReady.asObservable();
+  }
+
+  fetchRoles(): Observable<Roles[]> {
+    return this.listaRoles.asObservable();
   }
 
   fetchUsuarios(): Observable<Usuarios[]> {
@@ -173,6 +188,27 @@ export class DbService {
       }
     })
   }
+  buscarRoles() {
+    //ejecuto la consulta
+    return this.database.executeSql('SELECT * FROM rol', []).then(res => {
+      //creo el arreglo para los registros
+      let items: Roles[] = [];
+      //si existen filas
+      if (res.rows.length > 0) {
+        //recorro el cursor y lo agrego al arreglo
+        for (var i = 0; i < res.rows.length; i++) {
+          items.push({
+            id: res.rows.item(i).id,
+            nombre_rol: res.rows.item(i).nombre_rol
+          })
+        }
+      }
+      //actualizo el observable
+      this.listaRoles.next(items);
+
+    })
+  }
+
   buscarUsuarios() {
     //ejecuto la consulta
     return this.database.executeSql('SELECT * FROM usuario', []).then(res => {
@@ -295,6 +331,7 @@ export class DbService {
         for (var i = 0; i < res.rows.length; i++) {
           items.push({
             id_perfil: res.rows.item(i).id_perfil,
+            id_usuario: res.rows.item(i).id_usuario,
             nombre: res.rows.item(i).nombre,
             apellido: res.rows.item(i).apellido,
             edad: res.rows.item(i).edad,
@@ -308,6 +345,41 @@ export class DbService {
       }
       //actualizo el observable
       this.listaUsuarios.next(items);
+
+    })
+  }
+
+  buscarPerfil(id_perfil) {
+    let data = [id_perfil]; 
+    //ejecuto la consulta
+    return this.database.executeSql('SELECT * FROM perfil where id_perfil = ?', data).then(res => {
+      //creo el arreglo para los registros
+      let items: Perfil[] = [];
+      //si existen filas
+      if (res.rows.length > 0) {
+        //recorro el cursor y lo agrego al arreglo
+        for (var i = 0; i < res.rows.length; i++) {
+          items.push({
+            id_perfil: res.rows.item(i).id_perfil,
+            id_usuario: res.rows.item(i).id_usuario,
+            nombre: res.rows.item(i).nombre,
+            apellido: res.rows.item(i).apellido,
+            edad: res.rows.item(i).edad,
+            imagen: res.rows.item(i).imagen,
+            numero: res.rows.item(i).numero,
+            correo: res.rows.item(i).correo,
+            ciudad: res.rows.item(i).ciudad,
+            provincia: res.rows.item(i).provincia
+          })
+        }
+        this.nativeStorage.setItem('perfil',id_perfil)
+        this.nativeStorage.getItem('perfil')
+      
+      return true;
+      }
+      else{
+        return false;
+      }
 
     })
   }
@@ -348,16 +420,22 @@ export class DbService {
     })
   }
 
-  registrarIdPerfil(id_perfil) {
-    let data = [id_perfil];
-    return this.database.executeSql('INSERT OR REPLACE INTO perfil(id_perfil) VALUES (?)', data).then(data2 => {
+  registrarIdPerfil(id_perfil,id_usuario) {
+    let data = [id_perfil,id_usuario];
+    return this.database.executeSql('INSERT OR REPLACE INTO perfil(id_perfil,id_usuario) VALUES (?,?)', data).then(data2 => {
+      this.buscarPerfiles();
+    })
+    
+  }
+  registrarPerfil(apellido,numero,correo,id_perfil){
+    let data = [apellido,numero,correo,id_perfil];
+    return this.database.executeSql('UPDATE perfil SET nombre = ?,apellido = ?,numero = ?,correo = ? WHERE id_perfil = ?', data).then(data2 => {
       this.buscarPerfiles();
     })
   }
-
-  registrarFotoPerfil(id,imagen) {
-    let data = [id,imagen];
-    return this.database.executeSql('UPDATE perfil SET imagen = ? WHERE id = ?', data).then(data2 => {
+  registrarFotoPerfil(imagen,id_perfil) {
+    let data = [imagen,id_perfil,];
+    return this.database.executeSql('UPDATE perfil SET imagen = ? WHERE id_perfil = ?', data).then(data2 => {
       this.buscarPerfiles();
     })
   }
