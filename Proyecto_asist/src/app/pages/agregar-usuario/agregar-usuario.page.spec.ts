@@ -21,7 +21,5 @@ describe('AgregarUsuarioPage', () => {
     fixture.detectChanges();
   }));
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  
 });
