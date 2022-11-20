@@ -14,7 +14,7 @@
     <ion-item lines="none" class="ion-text-center">
       <ion-label>
         Ingenieria en informatica
-        <p>{{ nombre }}</p>
+        <p>{{ nombre_p }}</p>
       </ion-label>
     </ion-item>
     <div class="cont">
@@ -27,34 +27,10 @@
           <th class="a">Asistencia</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody *ngFor="let it of seccion">
         <tr>
-          <td><p>Arquitectura</p> </td>
+          <td><p>{{it.nombre}}</p> </td>
           <td><p class="numero">100%</p></td>
-      </tr>
-      <tr>
-        <td><p>Calidad De Software</p> </td>
-        <td><p class="numero">90%</p></td>
-      </tr>
-      <tr>
-        <td><p>Estadistica Descriptiva</p> </td>
-        <td><p class="numero">75%</p></td>
-      </tr>
-      <tr>
-        <td><p>Etica Para El Trabajo</p> </td>
-        <td><p class="numero">90%</p></td>
-      </tr>
-      <tr>
-        <td><p>Ingles Intermedio</p> </td>
-        <td><p class="numero">94%</p></td>
-      </tr>
-      <tr>
-        <td><p>Proceso De Portafolio 4</p> </td>
-        <td><p class="numero">90%</p></td>
-      </tr>
-      <tr>
-        <td><p>Programacion De Aplicaciones Moviles</p> </td>
-        <td><p class="numero">100%</p></td>
       </tr>
       </tbody>
 </table>

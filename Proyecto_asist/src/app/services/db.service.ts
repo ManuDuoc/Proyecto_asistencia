@@ -10,6 +10,9 @@ import { Asistencia } from './asistencia';
 import { Seccion } from './seccion';
 import { Listado } from './listado';
 import { Perfil } from './perfil';
+import { Asistido } from './asistido';
+import { Listados } from './listados';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -22,7 +25,7 @@ export class DbService {
   Asistencia: string = "CREATE TABLE IF NOT EXISTS asistencia(id INTEGER PRIMARY KEY autoincrement, id_ramo INTEGER NOT NULL, id_seccion INTEGER  NOT NULL,id_profesor INTEGER NOT NULL, FOREIGN KEY(id_ramo) REFERENCES ramo(id_ramo) on delete cascade on update cascade, FOREIGN KEY(id_seccion) REFERENCES seccion(id) on delete cascade on update cascade,FOREIGN KEY(id_profesor) REFERENCES rol(id) on delete cascade on update cascade);";
   Listado: string = "CREATE TABLE IF NOT EXISTS listado(id INTEGER PRIMARY KEY autoincrement, id_estudiante INTEGER NOT NULL, id_asigsecci INTEGER  NOT NULL);";
   Perfil: string = "CREATE TABLE IF NOT EXISTS perfil(id_perfil INTEGER PRIMARY KEY autoincrement,id_usuario INTEGER NULL,nombre VARCHAR(30) NULL, apellido VARCHAR(30) NULL,edad INTEGER NULL,imagen BLOB NULL,numero INTEGER NULL,correo VARCHAR(30) NULL,ciudad VARCHAR(30) NULL, provincia VARCHAR(30) NULL,FOREIGN KEY(id_usuario) REFERENCES usuario(id) on delete cascade on update cascade);";
-  
+  Asistido: string = "CREATE TABLE IF NOT EXISTS asistido(id INTEGER PRIMARY KEY autoincrement, fecha VARCHAR(60) NOT NULL,nombre VARCHAR(30) NOT NULL);";
   //insertar en la tabla rol
   RolProfesor: string = "INSERT or IGNORE INTO rol(id,nombre_rol) VALUES (1,'Profesor');";
   RolEstudiante: string = "INSERT or IGNORE INTO rol(id,nombre_rol) VALUES (2,'Estudiante');";
@@ -37,6 +40,8 @@ export class DbService {
   listaAsistencia = new BehaviorSubject([]);
   listaListado = new BehaviorSubject([]);
   listaPerfil = new BehaviorSubject([]);
+  listaAsistido = new BehaviorSubject([]);
+  listaSecc = new BehaviorSubject([]);
   
 
   private isDBReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -85,12 +90,14 @@ export class DbService {
       await this.database.executeSql(this.Asistencia, []);
       await this.database.executeSql(this.Listado, []);
       await this.database.executeSql(this.Perfil, []);
+      await this.database.executeSql(this.Asistido, []);
       //ejecuto los insert
       
 
       //llamo al observable de carga de datos
       this.buscarUsuarios();
       this.buscarPerfiles();
+      this.buscarsec();
       //modificar el observable de el status de la BD
       this.isDBReady.next(true);
 
@@ -101,7 +108,9 @@ export class DbService {
   dbState() {
     return this.isDBReady.asObservable();
   }
-
+  fetchsecc(): Observable<Listados[]> {
+    return this.listaSecc.asObservable();
+  }
   fetchRoles(): Observable<Roles[]> {
     return this.listaRoles.asObservable();
   }
@@ -130,7 +139,31 @@ export class DbService {
     return this.listaPerfil.asObservable();
   }
 
+  fetchAsistidos(): Observable<Asistido[]> {
+    return this.listaAsistido.asObservable();
+  }
 
+  buscarsec() {
+    //ejecuto la consulta
+    return this.database.executeSql('SELECT ramo.sigla,ramo.nombre FROM asistencia JOIN ramo ON asistencia.id_ramo = ramo.id_ramo', []).then(res => {
+      //creo el arreglo para los registros
+      let items: Listados[] = [];
+      //si existen filas
+      if (res.rows.length > 0) {
+        //recorro el cursor y lo agrego al arreglo
+        for (var i = 0; i < res.rows.length; i++) {
+          items.push({
+            seccion: res.rows.item(i).sigla,
+            nombre: res.rows.item(i).nombre
+          })
+          this.presentAlert("Datos: " + items[i].nombre);
+        }
+      }
+      //actualizo el observable
+      this.listaSecc.next(items);
+
+    })
+  }
 
   inicoSesion(nombre,clave){
     let data = [nombre, clave]; 
@@ -383,6 +416,36 @@ export class DbService {
     })
   }
 
+  buscarAsistidos() {
+    //ejecuto la consulta
+    return this.database.executeSql('SELECT * FROM asistido', []).then(res => {
+      //creo el arreglo para los registros
+      let items: Asistido[] = [];
+      //si existen filas
+      if (res.rows.length > 0) {
+        //recorro el cursor y lo agrego al arreglo
+        for (var i = 0; i < res.rows.length; i++) {
+          items.push({
+            id: res.rows.item(i).id,
+            fecha: res.rows.item(i).fecha,
+            nombre: res.rows.item(i).nombre
+          })
+        }
+      }
+      //actualizo el observable
+      this.listaAsistido.next(items);
+
+    })
+  }
+  registroAsistido(fecha,nombre) {
+    let data = [fecha,nombre];
+    return this.database.executeSql('INSERT INTO asistido(fecha,nombre) VALUES (?,?)', data).then(data2 => {
+      this.buscarAsistidos();
+    })
+  }
+
+
+
   registrarUsuario(id, nombre, clave, id_rol) {
     let data = [id, nombre, clave, id_rol];
     return this.database.executeSql('INSERT INTO usuario(id,nombre,clave,id_rol) VALUES (?,?,?,?)', data).then(data2 => {
@@ -438,8 +501,6 @@ export class DbService {
       this.buscarPerfiles();
     })
   }
-
-
   modificarUsuario(id, nombre,clave,  id_rol) {
     let data = [id, nombre, clave, id_rol];
     return this.database.executeSql('UPDATE usuario SET nombre = ?, clave = ?,  id_rol = ? WHERE id = ?', data).then(data2 => {

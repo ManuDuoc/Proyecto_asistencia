@@ -86,7 +86,19 @@ export class MenuAlumnoPage implements OnInit {
     this.router.navigate(['/alumno'], navigationExtras);
   }
 
+  et(){
+    let navigationExtras: NavigationExtras = {
+      state: {
+        idEnviado: this.id,
+        nombreEnviado: this.nombre,
+        rolEnviado: this.id_rol
+      }
+    }
+    this.router.navigate(['/asistcarr'], navigationExtras);
+  }
+
   ngOnInit() {
+    this.servicio.buscarsec();
     this.servicio.dbState().subscribe((res) => {
       if (res) {
         this.servicio.fetchUsuarios().subscribe(async item => {
@@ -112,6 +124,16 @@ export class MenuAlumnoPage implements OnInit {
       }
   })
   
+  }
+  
+  asistir() {
+    if (this.scannedResult == "") {
+      this.servicio.presentAlert('No as escaneado el Codigo Qr')
+    } else {
+      this.servicio.registroAsistido(this.scannedResult, this.nombre);
+      this.servicio.presentAlert('Asistencia Registrada')
+      console.log(this.scannedResult, this.nombre)
+    }
   }
 
   option = {
