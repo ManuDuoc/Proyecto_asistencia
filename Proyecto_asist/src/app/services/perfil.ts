@@ -4,7 +4,7 @@ export class Perfil {
     nombre : String;
     apellido: String;
     edad: Number;
-    imagen : String;
+    imagen : Blob;
     numero : Number;
     correo : String;
     ciudad: String;

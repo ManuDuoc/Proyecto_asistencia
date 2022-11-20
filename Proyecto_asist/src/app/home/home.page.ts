@@ -65,7 +65,6 @@ export class HomePage {
       for(var i = 0; i < user2.length; i++){
         
           this.servicio.registrarRamo(this.user[i].id,this.user[i].sigla,this.user[i].nombre);
-          this.servicio.presentAlert("Ramo Registrado");
       }
 
     },(error)=>{
@@ -78,7 +77,6 @@ export class HomePage {
       for(var i = 0; i < user2.length; i++){
         
           this.servicio.registrarSeccion(this.user[i].id,this.user[i].sigla);
-          this.servicio.presentAlert("Sección Registrada");
       }
 
     },(error)=>{
@@ -91,7 +89,6 @@ export class HomePage {
       for(var i = 0; i < user2.length; i++){
         
           this.servicio.registrarAsistencia(this.user[i].id,this.user[i].id_ramo,this.user[i].id_seccion,this.user[i].id_profesor);
-          this.servicio.presentAlert("Asistencia Registrada");
       }
 
     },(error)=>{
@@ -104,7 +101,6 @@ export class HomePage {
       for(var i = 0; i < user2.length; i++){
         
           this.servicio.registrarListado(this.user[i].id,this.user[i].id_estudiante,this.user[i].id_asigsecci);
-          this.servicio.presentAlert("Listado Registrado");
       }
 
     },(error)=>{
@@ -117,7 +113,6 @@ export class HomePage {
       for(var i = 0; i < user2.length; i++){
         
           this.servicio.registrarUsuario(this.user[i].id,this.user[i].nombre,this.user[i].clave,this.user[i].id_rol);
-          this.servicio.presentAlert("Usuario Registrado");
       }
 
     },(error)=>{

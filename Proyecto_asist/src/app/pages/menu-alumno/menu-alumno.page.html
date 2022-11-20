@@ -7,7 +7,7 @@
       Inicio
     </ion-title>
     <ion-buttons slot="end">
-      <ion-button fill="clear" class="ass" [routerLink]="'/alumno'">PERFIL</ion-button>
+      <ion-button fill="clear" class="ass" (click)="ti()" >PERFIL</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -34,7 +34,15 @@
     class="ion-text-wrap">Mensaje: {{scannedResult}}</ion-label>
   </ion-item>
   <div class="a"></div>
-  
+  <ion-grid>
+    <ion-row class="espacio">
+      <ion-col size="2"></ion-col>
+      <ion-col>
+        <ion-button size="small" class="login-button" (click)="asistir()">Asistencia</ion-button>
+      </ion-col>
+      <ion-col size="2"></ion-col>
+    </ion-row>
+  </ion-grid>
   </div>
   
   

@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, LOCALE_ID, OnInit } from '@angular/core';
 import { CamaraService } from 'src/app/services/camara.service';
 import { MenuController } from '@ionic/angular';
 import { NativeStorage } from '@awesome-cordova-plugins/native-storage/ngx';
 import { AlertController } from '@ionic/angular';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute,NavigationExtras } from '@angular/router';
 import { DbService } from 'src/app/services/db.service';
 
 @Component({
@@ -13,13 +13,15 @@ import { DbService } from 'src/app/services/db.service';
 })
 export class AlumnoPage implements OnInit {
   usuario: any[] = [];
-  id: number;
-  nombre: any;
-  clave: any;
-  id_rol: number;
+  id_rol:number;
 
-  perfil:any[] = [];
+  nombre_p: any;
+  id_p: number;
+  token: any;
+  perfil: any[] = [];
   id_perfil: number; 
+  id_usuario: number;
+  nombre: any;
   apellido: any; 
   edad: number;
   imagen : any;
@@ -32,74 +34,59 @@ export class AlumnoPage implements OnInit {
   constructor(private c: CamaraService,private menu: MenuController,public nativeStorage:NativeStorage,private alertController: AlertController,private router : Router ,private activedRouter: ActivatedRoute,private servicio:DbService) {
     this.activedRouter.queryParams.subscribe(param=>{
       if(this.router.getCurrentNavigation().extras.state){
-        this.id = this.router.getCurrentNavigation().extras.state.idEnviado;
-        this.nombre = this.router.getCurrentNavigation().extras.state.nombreEnviado;
-        this.clave= this.router.getCurrentNavigation().extras.state.claveEnviado;
-        this.id_rol= this.router.getCurrentNavigation().extras.state.rolEnviado;
+        this.id_p = this.router.getCurrentNavigation().extras.state.idEnviado;
+        this.nombre_p = this.router.getCurrentNavigation().extras.state.nombreEnviado;
+        this.id_rol = this.router.getCurrentNavigation().extras.state.rolEnviado;
+        console.log(this.id_p)
       }
     })
-  }  
+  }
+  ti(){
+    let navigationExtras: NavigationExtras = {
+      state: {
+        id_Perfil_Enviado: this.id_p,
+        id_rolEnviado: this.id_rol
+        
+      }
+    }
+
+    this.router.navigate(['/perfil'], navigationExtras);
+  }
+    
   tomarF(){
     this.c.takePicture();
   }
 
   ngOnInit(){
     this.c.regresarfoto().subscribe((res)=>{
+      if (res) {
       this.imageData = res;
-      this.servicio.registrarFotoPerfil(this.imageData,this.id);
+      this.servicio.registrarFotoPerfil(this.imageData,this.id_p);
+      }
     })
-
     this.servicio.dbState().subscribe((res) => {
       if (res) {
-        this.servicio.fetchUsuarios().subscribe(async item => {
-          this.usuario = item;
+        this.servicio.fetchPerfiles().subscribe(async item => {
+          this.perfil = item;
         })
-
-
       }
-
-      
-
-
-    this.nativeStorage.getItem('logeado').then((data)=>{
-      console.log("Bienvenido " + data)
-      for (let i = 0; i < this.usuario.length; i++) {
-      if(this.usuario[i].nombre == data){
-        this.id = this.usuario[i].id
-        this.nombre = this.usuario[i].nombre
-        this.clave = this.usuario[i].clave
-        this.id_rol = this.usuario[i].id_rol
-        this.servicio.registrarIdPerfil(this.usuario[i].id,this.usuario[i].id);
-        this.servicio.buscarPerfil(this.usuario[i].id);
-      }
-      }
-    })
-  });
-
-  this.servicio.dbState().subscribe((re) => {
-        if (re) {
-          this.servicio.fetchPerfiles().subscribe(async item => {
-            this.perfil = item;
-          })
-  
-  
-        }
-
-
-
-    this.nativeStorage.getItem('perfil').then((x)=>{
-      console.log("Bienvenido " + x)
+      this.token=localStorage.getItem('perfil')
+      console.log("Bienvenido " + this.token)
       for (let i = 0; i < this.perfil.length; i++) {
-      if(this.perfil[i].id_perfil == x){
-        this.id_perfil = this.perfil[i].id_perfil
+      if(this.perfil[i].id_perfil == this.token ){
+        this.id_usuario = this.perfil[i].id_usuario
+        this.nombre = this.perfil[i].nombre
         this.apellido = this.perfil[i].apellido
+        this.edad = this.perfil[i].edad
+        this.imagen = this.perfil[i].imagen
         this.numero = this.perfil[i].numero
         this.correo = this.perfil[i].correo
+        this.ciudad = this.perfil[i].ciudad
+        this.provincia = this.perfil[i].provincia
       }
       }
     })
-  });
-
+  
   }
 }
 

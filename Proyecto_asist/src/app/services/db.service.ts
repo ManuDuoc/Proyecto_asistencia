@@ -90,6 +90,7 @@ export class DbService {
 
       //llamo al observable de carga de datos
       this.buscarUsuarios();
+      this.buscarPerfiles();
       //modificar el observable de el status de la BD
       this.isDBReady.next(true);
 
@@ -147,8 +148,7 @@ export class DbService {
           })
         }
         //actualizo el observable
-      this.nativeStorage.setItem('logeado',nombre)
-      this.nativeStorage.getItem('logeado')
+      localStorage.setItem('logeado',nombre)
       
       return true;
       }
@@ -176,9 +176,7 @@ export class DbService {
           })
         }
         //actualizo el observable
-      this.nativeStorage.setItem('logeado',nombre)
-      this.nativeStorage.getItem('logeado')
-      
+        localStorage.setItem('logeado',nombre)      
       return true;
       }
       
@@ -344,7 +342,7 @@ export class DbService {
         }
       }
       //actualizo el observable
-      this.listaUsuarios.next(items);
+      this.listaPerfil.next(items);
 
     })
   }
@@ -372,14 +370,15 @@ export class DbService {
             provincia: res.rows.item(i).provincia
           })
         }
-        this.nativeStorage.setItem('perfil',id_perfil)
-        this.nativeStorage.getItem('perfil')
+        localStorage.setItem('perfil',id_perfil)
       
-      return true;
-      }
-      else{
+        return true;
+        }
+
+
+        else{
         return false;
-      }
+        }
 
     })
   }
@@ -427,8 +426,8 @@ export class DbService {
     })
     
   }
-  registrarPerfil(apellido,numero,correo,id_perfil){
-    let data = [apellido,numero,correo,id_perfil];
+  registrarPerfil(nombre,apellido,numero,correo,id_perfil){
+    let data = [nombre,apellido,numero,correo,id_perfil];
     return this.database.executeSql('UPDATE perfil SET nombre = ?,apellido = ?,numero = ?,correo = ? WHERE id_perfil = ?', data).then(data2 => {
       this.buscarPerfiles();
     })

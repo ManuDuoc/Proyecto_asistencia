@@ -36,6 +36,12 @@
     </ion-item>
     <ion-item  color="warning">
       <ion-label>
+        <ion-text>Apellido</ion-text>
+        <ion-input minlength="2" maxlength="25" type="text" [(ngModel)]="perfile.apellido"></ion-input>
+      </ion-label>
+    </ion-item>
+    <ion-item  color="warning">
+      <ion-label>
         <ion-text>Email</ion-text>
         <ion-input minlength="2" maxlength="25" type="email" [(ngModel)]="perfile.email"></ion-input>
       </ion-label>
