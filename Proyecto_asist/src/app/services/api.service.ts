@@ -27,7 +27,7 @@ export class ApiService {
   // Se declara la variable http de tipo HttpClient
     constructor(private http:HttpClient) { }
 
-getPosts():Observable<any>{
+  getPosts():Observable<any>{
     return this.http.get(this.apiURL+'/users/').pipe(
         retry(3), catchError(this.handleError)
     );
