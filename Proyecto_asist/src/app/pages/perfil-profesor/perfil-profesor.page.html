@@ -33,20 +33,20 @@
     <ion-item color="warning">
       <ion-label>
         <ion-text >Nombre</ion-text>
-        <p><ion-text color="primary" te>Manuel Alejandro Collao Contreras</ion-text></p>
+        <p><ion-text color="primary" te>{{nombre_p}}</ion-text></p>
       </ion-label>
-      <ion-icon (click)="presentAlert()" slot="end" name="create"></ion-icon>
+      <ion-icon (click)="ti()" slot="end" name="create"></ion-icon>
     </ion-item>
     <ion-item  color="warning">
       <ion-label>
         <ion-text>Email</ion-text>
-        <p><ion-text color="primary">man.collao@duocuc.cl</ion-text></p>
+        <p><ion-text color="primary">{{nombre}}</ion-text></p>
       </ion-label>
     </ion-item>
     <ion-item  color="warning">
       <ion-label>
         <ion-text>Telefono</ion-text>
-        <p><ion-text color="primary">+569 21942525</ion-text></p>
+        <p><ion-text color="primary">{{numero}}</ion-text></p>
       </ion-label>
     </ion-item>
   </ion-list>

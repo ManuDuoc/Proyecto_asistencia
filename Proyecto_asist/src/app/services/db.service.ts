@@ -13,6 +13,8 @@ import { Perfil } from './perfil';
 import { Asistido } from './asistido';
 import { Listados } from './listados';
 import { Clases } from './clases';
+import { CountClases } from './count-clases';
+import { CountAsistencia } from './count-asistencia';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +26,7 @@ export class DbService {
   Ramo: string = "CREATE TABLE IF NOT EXISTS ramo(id_ramo INTEGER PRIMARY KEY autoincrement, sigla VARCHAR(30) NOT NULL, nombre VARCHAR(30) NOT NULL);";
   Seccion: string = "CREATE TABLE IF NOT EXISTS seccion(id INTEGER PRIMARY KEY autoincrement, sigla VARCHAR(30) NOT NULL);";
   Asistencia: string = "CREATE TABLE IF NOT EXISTS asistencia(id INTEGER PRIMARY KEY autoincrement, id_ramo INTEGER NOT NULL, id_seccion INTEGER  NOT NULL,id_profesor INTEGER NOT NULL, FOREIGN KEY(id_ramo) REFERENCES ramo(id_ramo) on delete cascade on update cascade, FOREIGN KEY(id_seccion) REFERENCES seccion(id) on delete cascade on update cascade,FOREIGN KEY(id_profesor) REFERENCES rol(id) on delete cascade on update cascade);";
-  Listado: string = "CREATE TABLE IF NOT EXISTS listado(id INTEGER PRIMARY KEY autoincrement, id_estudiante INTEGER NOT NULL, id_asigsecci INTEGER  NOT NULL);";
+  Listado: string = "CREATE TABLE IF NOT EXISTS listado(id INTEGER PRIMARY KEY autoincrement, id_estudiante INTEGER NOT NULL, id_asigsecci INTEGER  NOT NULL,FOREIGN KEY(id_asigsecci) REFERENCES asistencia(id) on delete cascade on update cascade,FOREIGN KEY(id_estudiante) REFERENCES usuario(id) on delete cascade on update cascade);";
   Perfil: string = "CREATE TABLE IF NOT EXISTS perfil(id_perfil INTEGER PRIMARY KEY autoincrement,id_usuario INTEGER NULL,nombre VARCHAR(30) NULL, apellido VARCHAR(30) NULL,edad INTEGER NULL,imagen BLOB NULL,numero INTEGER NULL,correo VARCHAR(30) NULL,ciudad VARCHAR(30) NULL, provincia VARCHAR(30) NULL,FOREIGN KEY(id_usuario) REFERENCES usuario(id) on delete cascade on update cascade);";
   Asistido: string = "CREATE TABLE IF NOT EXISTS asistido(id INTEGER PRIMARY KEY autoincrement, fecha VARCHAR(60) NOT NULL,id_perfil INTEGER NOT NULL, id_seccion INTEGER NOT NULL,id_ramo INTEGER NOT NULL,FOREIGN KEY(id_perfil) REFERENCES perfil(id_perfil) on delete cascade on update cascade,FOREIGN KEY(id_seccion) REFERENCES seccion(id) on delete cascade on update cascade,FOREIGN KEY(id_ramo) REFERENCES ramo(id_ramo) on delete cascade on update cascade);";
   Clases: string = "CREATE TABLE IF NOT EXISTS clases(id_clase INTEGER PRIMARY KEY autoincrement,  id_seccion INTEGER NOT NULL,id_ramo INTEGER NOT NULL,id_profesor INTEGER  NOT NULL, fecha VARCHAR(60) NOT NULL, FOREIGN KEY(id_seccion) REFERENCES seccion(id) on delete cascade on update cascade, FOREIGN KEY(id_ramo) REFERENCES ramo(id_ramo) on delete cascade on update cascade,FOREIGN KEY(id_profesor) REFERENCES rol(id) on delete cascade on update cascade);";
@@ -45,6 +47,8 @@ export class DbService {
   listaAsistido = new BehaviorSubject([]);
   listaSecc = new BehaviorSubject([]);
   listaclases = new BehaviorSubject([]);
+  listaAsig = new BehaviorSubject([]);
+  listaTencia = new BehaviorSubject([]);
   
 
   private isDBReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -152,9 +156,62 @@ export class DbService {
     return this.listaclases.asObservable();
   }
 
+  fetchAsig(): Observable<CountClases[]> {
+    return this.listaAsig.asObservable();
+  }
+
+  fetchTencia(): Observable<CountAsistencia[]> {
+    return this.listaTencia.asObservable();
+  }
+
+
+  buscarAsigs(id_seccion, id_ramo) {
+    let data = [id_seccion, id_ramo]; 
+    //ejecuto la consulta
+    return this.database.executeSql('SELECT count(id_clase) FROM clases WHERE id_seccion = ? and id_ramo = ? ', data).then(res => {
+      //creo el arreglo para los registros
+      let items: CountClases[] = [];
+      //si existen filas
+      if (res.rows.length > 0) {
+        //recorro el cursor y lo agrego al arreglo
+        for (var i = 0; i < res.rows.length; i++) {
+          items.push({
+            contador: res.rows.item(i).id_clase
+          })
+          this.presentAlert("Datos: " + items[i].contador);
+        }
+      }
+      //actualizo el observable
+      this.listaAsig.next(items);
+
+    })
+  }
+
+  buscarTencia(id_seccion, id_ramo) {
+    let data = [id_seccion, id_ramo]; 
+    //ejecuto la consulta
+    return this.database.executeSql('SELECT count(id) FROM asistido WHERE id_seccion = ? and id_ramo = ? ', data).then(res => {
+      //creo el arreglo para los registros
+      let items: CountAsistencia[] = [];
+      //si existen filas
+      if (res.rows.length > 0) {
+        //recorro el cursor y lo agrego al arreglo
+        for (var i = 0; i < res.rows.length; i++) {
+          items.push({
+            contarAsist: res.rows.item(i).id
+          })
+          this.presentAlert("Datos: " + items[i].contarAsist);
+        }
+      }
+      //actualizo el observable
+      this.listaAsig.next(items);
+
+    })
+  }
+
   buscarsec() {
     //ejecuto la consulta
-    return this.database.executeSql('SELECT ramo.sigla,ramo.nombre FROM asistencia JOIN ramo ON asistencia.id_ramo = ramo.id_ramo', []).then(res => {
+    return this.database.executeSql('SELECT ramo.sigla, seccion.sigla ,ramo.nombre,listado.id_estudiante,listado.id_asigsecci FROM listado JOIN asistencia ON listado.id_asigsecci = asistencia.id JOIN ramo ON asistencia.id_ramo = ramo.id_ramo JOIN seccion ON asistencia.id_seccion = seccion.id JOIN usuario ON listado.id_estudiante = usuario.id ', []).then(res => {
       //creo el arreglo para los registros
       let items: Listados[] = [];
       //si existen filas
@@ -162,10 +219,12 @@ export class DbService {
         //recorro el cursor y lo agrego al arreglo
         for (var i = 0; i < res.rows.length; i++) {
           items.push({
+            sigla: res.rows.item(i).sigla,
             seccion: res.rows.item(i).sigla,
-            nombre: res.rows.item(i).nombre
+            nombre: res.rows.item(i).nombre,
+            id_estudiante:res.rows.item(i).id_estudiante,
+            id_asignatura:res.rows.item(i).id_asigsecci
           })
-          this.presentAlert("Datos: " + items[i].nombre);
         }
       }
       //actualizo el observable
