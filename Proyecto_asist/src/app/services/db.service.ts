@@ -12,6 +12,7 @@ import { Listado } from './listado';
 import { Perfil } from './perfil';
 import { Asistido } from './asistido';
 import { Listados } from './listados';
+import { Clases } from './clases';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,8 @@ export class DbService {
   Asistencia: string = "CREATE TABLE IF NOT EXISTS asistencia(id INTEGER PRIMARY KEY autoincrement, id_ramo INTEGER NOT NULL, id_seccion INTEGER  NOT NULL,id_profesor INTEGER NOT NULL, FOREIGN KEY(id_ramo) REFERENCES ramo(id_ramo) on delete cascade on update cascade, FOREIGN KEY(id_seccion) REFERENCES seccion(id) on delete cascade on update cascade,FOREIGN KEY(id_profesor) REFERENCES rol(id) on delete cascade on update cascade);";
   Listado: string = "CREATE TABLE IF NOT EXISTS listado(id INTEGER PRIMARY KEY autoincrement, id_estudiante INTEGER NOT NULL, id_asigsecci INTEGER  NOT NULL);";
   Perfil: string = "CREATE TABLE IF NOT EXISTS perfil(id_perfil INTEGER PRIMARY KEY autoincrement,id_usuario INTEGER NULL,nombre VARCHAR(30) NULL, apellido VARCHAR(30) NULL,edad INTEGER NULL,imagen BLOB NULL,numero INTEGER NULL,correo VARCHAR(30) NULL,ciudad VARCHAR(30) NULL, provincia VARCHAR(30) NULL,FOREIGN KEY(id_usuario) REFERENCES usuario(id) on delete cascade on update cascade);";
-  Asistido: string = "CREATE TABLE IF NOT EXISTS asistido(id INTEGER PRIMARY KEY autoincrement, fecha VARCHAR(60) NOT NULL,nombre VARCHAR(30) NOT NULL);";
+  Asistido: string = "CREATE TABLE IF NOT EXISTS asistido(id INTEGER PRIMARY KEY autoincrement, fecha VARCHAR(60) NOT NULL,id_perfil INTEGER NOT NULL, id_seccion INTEGER NOT NULL,id_ramo INTEGER NOT NULL,FOREIGN KEY(id_perfil) REFERENCES perfil(id_perfil) on delete cascade on update cascade,FOREIGN KEY(id_seccion) REFERENCES seccion(id) on delete cascade on update cascade,FOREIGN KEY(id_ramo) REFERENCES ramo(id_ramo) on delete cascade on update cascade);";
+  Clases: string = "CREATE TABLE IF NOT EXISTS clases(id_clase INTEGER PRIMARY KEY autoincrement,  id_seccion INTEGER NOT NULL,id_ramo INTEGER NOT NULL,id_profesor INTEGER  NOT NULL, fecha VARCHAR(60) NOT NULL, FOREIGN KEY(id_seccion) REFERENCES seccion(id) on delete cascade on update cascade, FOREIGN KEY(id_ramo) REFERENCES ramo(id_ramo) on delete cascade on update cascade,FOREIGN KEY(id_profesor) REFERENCES rol(id) on delete cascade on update cascade);";
   //insertar en la tabla rol
   RolProfesor: string = "INSERT or IGNORE INTO rol(id,nombre_rol) VALUES (1,'Profesor');";
   RolEstudiante: string = "INSERT or IGNORE INTO rol(id,nombre_rol) VALUES (2,'Estudiante');";
@@ -42,6 +44,7 @@ export class DbService {
   listaPerfil = new BehaviorSubject([]);
   listaAsistido = new BehaviorSubject([]);
   listaSecc = new BehaviorSubject([]);
+  listaclases = new BehaviorSubject([]);
   
 
   private isDBReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -91,6 +94,7 @@ export class DbService {
       await this.database.executeSql(this.Listado, []);
       await this.database.executeSql(this.Perfil, []);
       await this.database.executeSql(this.Asistido, []);
+      await this.database.executeSql(this.Clases, []);
       //ejecuto los insert
       
 
@@ -98,6 +102,7 @@ export class DbService {
       this.buscarUsuarios();
       this.buscarPerfiles();
       this.buscarsec();
+      this.buscarClases();
       //modificar el observable de el status de la BD
       this.isDBReady.next(true);
 
@@ -141,6 +146,10 @@ export class DbService {
 
   fetchAsistidos(): Observable<Asistido[]> {
     return this.listaAsistido.asObservable();
+  }
+
+  fetchClases(): Observable<Clases[]> {
+    return this.listaclases.asObservable();
   }
 
   buscarsec() {
@@ -236,6 +245,30 @@ export class DbService {
       }
       //actualizo el observable
       this.listaRoles.next(items);
+
+    })
+  }
+
+  buscarClases() {
+    //ejecuto la consulta
+    return this.database.executeSql('SELECT * FROM clases', []).then(res => {
+      //creo el arreglo para los registros
+      let items: Clases[] = [];
+      //si existen filas
+      if (res.rows.length > 0) {
+        //recorro el cursor y lo agrego al arreglo
+        for (var i = 0; i < res.rows.length; i++) {
+          items.push({
+            id_clase: res.rows.item(i).id_clase,
+            id_seccion: res.rows.item(i).id_seccion,
+            id_ramo: res.rows.item(i).id_ramo,
+            id_profesor: res.rows.item(i).id_profesor,
+            fecha: res.rows.item(i).fecha,
+          })
+        }
+      }
+      //actualizo el observable
+      this.listaclases.next(items);
 
     })
   }
@@ -428,7 +461,9 @@ export class DbService {
           items.push({
             id: res.rows.item(i).id,
             fecha: res.rows.item(i).fecha,
-            nombre: res.rows.item(i).nombre
+            id_perfil: res.rows.item(i).id_perfil,
+            id_seccion: res.rows.item(i).id_seccion,
+            id_ramo: res.rows.item(i).id_ramo
           })
         }
       }
@@ -437,10 +472,18 @@ export class DbService {
 
     })
   }
-  registroAsistido(fecha,nombre) {
-    let data = [fecha,nombre];
-    return this.database.executeSql('INSERT INTO asistido(fecha,nombre) VALUES (?,?)', data).then(data2 => {
+  registroAsistido(fecha,id_perfil,id_seccion,id_ramo) {
+    let data = [fecha,id_perfil,id_seccion,id_ramo];
+    return this.database.executeSql('INSERT INTO asistido(fecha,id_perfil,id_seccion,id_ramo) VALUES (?,?,?,?)', data).then(data2 => {
       this.buscarAsistidos();
+      this.presentAlert("Asistencia Registrada");
+    })
+  }
+
+  registroClases(id_seccion,id_ramo,id_profesor,fecha) {
+    let data = [id_seccion,id_ramo,id_profesor,fecha];
+    return this.database.executeSql('INSERT INTO clases(id_seccion,id_ramo,id_profesor,fecha) VALUES (?,?,?,?)', data).then(data2 => {
+      this.buscarClases();
     })
   }
 

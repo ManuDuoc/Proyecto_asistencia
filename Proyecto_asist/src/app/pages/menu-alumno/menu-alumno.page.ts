@@ -16,12 +16,17 @@ export class MenuAlumnoPage implements OnInit {
   content_visibility = 'hidden';
 
   usuario: any[] = [];
+  clases: any[] = [];
   id: number;
   nombre: any;
   clave: any;
   id_rol: number;
 
   token: any;
+  id_clase: number;
+  fecha: any;
+  id_ramo: number;
+  id_seccion: number
 
   constructor(private menu: MenuController,private servicio:DbService,public nativeStorage:NativeStorage,private router : Router) {
     this.menu.enable(true);
@@ -130,9 +135,25 @@ export class MenuAlumnoPage implements OnInit {
     if (this.scannedResult == "") {
       this.servicio.presentAlert('No as escaneado el Codigo Qr')
     } else {
-      this.servicio.registroAsistido(this.scannedResult, this.nombre);
-      this.servicio.presentAlert('Asistencia Registrada')
-      console.log(this.scannedResult, this.nombre)
+      this.servicio.dbState().subscribe((res) => {
+        if (res) {
+          this.servicio.fetchClases().subscribe(async item => {
+            this.clases = item;
+          })
+    
+        }
+        for (let i = 0; i < this.clases.length; i++) {
+        if(this.clases[i].fecha == this.scannedResult){
+          this.id_clase = this.clases[i].id_clase
+          this.id_seccion = this.clases[i].id_seccion
+          this.id_ramo = this.clases[i].id_ramo
+          this.fecha = this.clases[i].fecha
+
+        }
+        }
+    })
+      this.servicio.registroAsistido(this.scannedResult,this.id,this.id_seccion,this.id_ramo);
+      console.log(this.scannedResult,this.id_seccion,this.id_ramo,this.fecha )
     }
   }
 

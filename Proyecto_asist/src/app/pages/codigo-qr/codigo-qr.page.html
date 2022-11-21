@@ -9,11 +9,11 @@
 
 <ion-content [style.visibility]="content_visibility" color="warning">
   <div class="cont">
-    <ion-select placeholder="Seleccione el dia" [(ngModel)]="seccion">
-      <ion-select-option *ngFor="let a of Dia" [value]="a.dia">{{a.Dia}}</ion-select-option>
+    <ion-select placeholder="Seleccione la sección" [(ngModel)]="secc">
+      <ion-select-option *ngFor="let a of seccion" [value]="a.id">{{a.sigla}}</ion-select-option>
     </ion-select>
-    <ion-select placeholder="Seleccione la Sección" [(ngModel)]="seccion">
-      <ion-select-option *ngFor="let a of Seccion" [value]="a.seccion">{{a.Seccion}}</ion-select-option>
+    <ion-select placeholder="Seleccione el nombre" [(ngModel)]="nombre">
+      <ion-select-option *ngFor="let a of ramo" [value]="a.id_ramo">{{a.nombre}}</ion-select-option>
     </ion-select>
     <div class="but">
     <button (click) ="toggleDisplay()">Generar Qr</button>

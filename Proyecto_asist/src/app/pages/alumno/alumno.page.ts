@@ -62,6 +62,7 @@ export class AlumnoPage implements OnInit {
       if (res) {
       this.imageData = res;
       this.servicio.registrarFotoPerfil(this.imageData,this.id_p);
+      this.servicio.buscarPerfiles();
       }
     })
     this.servicio.dbState().subscribe((res) => {
