@@ -6,5 +6,6 @@ export class Listados {
     id_asignatura: Number;
     clases : Number;
     fecha : String;
+    nom: String;
 
 }

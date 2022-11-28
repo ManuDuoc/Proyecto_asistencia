@@ -213,7 +213,7 @@ export class DbService {
 
   buscarsec() {
     //ejecuto la consulta
-    return this.database.executeSql("SELECT ramo.sigla AS siglas, seccion.sigla ,ramo.nombre,listado.id_estudiante,listado.id_asigsecci, IFNULL((select count(id) from asistido where id_ramo = ramo.id_ramo and id_seccion = seccion.id) ,'0')*100  / IFNULL((select count(id_clase) from clases where id_ramo = ramo.id_ramo and id_seccion = seccion.id),'0')  AS clase,IFNULL((select hora from asistido where id_ramo = ramo.id_ramo and id_seccion = seccion.id) ,'no tines horas registradas') AS fecha FROM listado JOIN asistencia ON listado.id_asigsecci = asistencia.id JOIN ramo ON asistencia.id_ramo = ramo.id_ramo JOIN seccion ON asistencia.id_seccion = seccion.id JOIN usuario ON listado.id_estudiante = usuario.id ", []).then(res => {
+    return this.database.executeSql("SELECT ramo.sigla AS siglas, seccion.sigla ,ramo.nombre,listado.id_estudiante,listado.id_asigsecci, IFNULL((select count(id) from asistido where id_ramo = ramo.id_ramo and id_seccion = seccion.id) ,'0')*100  / IFNULL((select count(id_clase) from clases where id_ramo = ramo.id_ramo and id_seccion = seccion.id),'0')  AS clase,IFNULL((select hora from asistido where id_ramo = ramo.id_ramo and id_seccion = seccion.id) ,'no tines horas registradas') AS fecha,IFNULL((select nombre from perfil where id_perfil = usuario.id ) ,usuario.nombre) AS nom FROM listado JOIN asistencia ON listado.id_asigsecci = asistencia.id JOIN ramo ON asistencia.id_ramo = ramo.id_ramo JOIN seccion ON asistencia.id_seccion = seccion.id JOIN usuario ON listado.id_estudiante = usuario.id ", []).then(res => {
       //creo el arreglo para los registros
       let items: Listados[] = [];
       //si existen filas
@@ -227,7 +227,8 @@ export class DbService {
             id_estudiante: res.rows.item(i).id_estudiante,
             id_asignatura: res.rows.item(i).id_asigsecci,
             clases : res.rows.item(i).clase,
-            fecha: res.rows.item(i).fecha
+            fecha: res.rows.item(i).fecha,
+            nom: res.rows.item(i).nom
           })
         }
       }

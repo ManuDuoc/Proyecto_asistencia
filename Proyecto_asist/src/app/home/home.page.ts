@@ -113,6 +113,7 @@ export class HomePage {
       for(var i = 0; i < user2.length; i++){
         
           this.servicio.registrarUsuario(this.user[i].id,this.user[i].nombre,this.user[i].clave,this.user[i].id_rol);
+          this.servicio.registrarIdPerfil(this.user[i].id,this.user[i].id);
       }
 
     },(error)=>{

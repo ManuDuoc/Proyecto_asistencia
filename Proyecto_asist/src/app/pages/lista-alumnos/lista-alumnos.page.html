@@ -13,104 +13,24 @@
   <div class="contenido">
     <ion-item lines="none" class="ion-text-center">
       <ion-label>
-        PGY4121-002D
-        <p>Manuel Alejandro Collao Contreras</p>
+        {{seccion1}}-{{seccion2}}
+        <p>{{seccion3}} {{seccion4}} {{seccion5}} {{seccion6}} {{seccion7}}</p>
       </ion-label>
     </ion-item>
     <div class="cont">
-      <p class="mp">Programacion de Aplicaciones Moviles</p>
+      <p class="mp">{{token}}</p>
     </div>
     <table>
       <thead>
         <tr>
           <th>Nombre</th>
-          <th class="a">Rut</th>
+          <th class="a">asistencia</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td><p>Anibal Aaron Perez Muñoz</p> </td>
-          <td><p class="numero">20.825.627-0</p></td>
-      </tr>
-      <tr>
-        <td><p>Anibal Aaron Perez Muñoz</p> </td>
-        <td><p class="numero">20-780.811-3</p></td>
-      </tr>
-      <tr>
-        <td><p>Anibal Aaron Perez Muñoz</p> </td>
-        <td><p class="numero">20-780.811-3</p></td>
-      </tr>
-      <tr>
-        <td><p>Anibal Aaron Perez Muñoz</p> </td>
-        <td><p class="numero">20-780.811-3</p></td>
-      </tr>
-      <tr>
-        <td><p>Anibal Aaron Perez Muñoz</p> </td>
-        <td><p class="numero">20-780.811-3</p></td>
-      </tr>
-      <tr>
-        <td><p>Anibal Aaron Perez Muñoz</p> </td>
-        <td><p class="numero">20-780.811-3</p></td>
-      </tr>
-      <tr>
-        <td><p>Anibal Aaron Perez Muñoz</p> </td>
-        <td><p class="numero">20-780.811-3</p></td>
-      </tr>
-      <tr>
-        <td><p>Anibal Aaron Perez Muñoz</p> </td>
-        <td><p class="numero">20-780.811-3</p></td>
-      </tr>
-      <tr>
-        <td><p>Anibal Aaron Perez Muñoz</p> </td>
-        <td><p class="numero">20-780.811-3</p></td>
-      </tr>
-      <tr>
-        <td><p>Anibal Aaron Perez Muñoz</p> </td>
-        <td><p class="numero">20-780.811-3</p></td>
-      </tr>
-      <tr>
-        <td><p>Anibal Aaron Perez Muñoz</p> </td>
-        <td><p class="numero">20-780.811-3</p></td>
-      </tr>
-      <tr>
-        <td><p>Anibal Aaron Perez Muñoz</p> </td>
-        <td><p class="numero">20-780.811-3</p></td>
-      </tr>
-      <tr>
-        <td><p>Anibal Aaron Perez Muñoz</p> </td>
-        <td><p class="numero">20-780.811-3</p></td>
-      </tr>
-      <tr>
-        <td><p>Anibal Aaron Perez Muñoz</p> </td>
-        <td><p class="numero">20-780.811-3</p></td>
-      </tr>
-      <tr>
-        <td><p>Anibal Aaron Perez Muñoz</p> </td>
-        <td><p class="numero">20-780.811-3</p></td>
-      </tr>
-      <tr>
-        <td><p>Anibal Aaron Perez Muñoz</p> </td>
-        <td><p class="numero">20-780.811-3</p></td>
-      </tr>
-      <tr>
-        <td><p>Anibal Aaron Perez Muñoz</p> </td>
-        <td><p class="numero">20-780.811-3</p></td>
-      </tr>
-      <tr>
-        <td><p>Anibal Aaron Perez Muñoz</p> </td>
-        <td><p class="numero">20-780.811-3</p></td>
-      </tr>
-      <tr>
-        <td><p>Anibal Aaron Perez Muñoz</p> </td>
-        <td><p class="numero">20-780.811-3</p></td>
-      </tr>
-      <tr>
-        <td><p>Anibal Aaron Perez Muñoz</p> </td>
-        <td><p class="numero">20-780.811-3</p></td>
-      </tr>
-      <tr>
-        <td><p>Anibal Aaron Perez Muñoz</p> </td>
-        <td><p class="numero">20-780.811-3</p></td>
+      <tbody *ngFor="let it of seccion">
+        <tr *ngIf="it.sigla == seccion1 && it.seccion == seccion2">
+          <td><p>{{it.nom}}</p> </td>
+          <td><p class="numero">{{it.clases}}%</p></td>
       </tr>
       </tbody>
 </table>
