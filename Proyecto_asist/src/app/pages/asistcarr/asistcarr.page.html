@@ -30,7 +30,7 @@
       <tbody *ngFor="let it of seccion">
         <tr *ngIf="it.id_estudiante == id">
           <td><p>{{it.nombre}}</p> </td>
-          <td><p class="numero">100%</p></td>
+          <td><p class="numero">{{it.clases}}%</p></td>
       </tr>
       </tbody>
 </table>

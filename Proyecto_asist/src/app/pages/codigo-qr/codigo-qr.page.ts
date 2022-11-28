@@ -21,8 +21,6 @@ export class CodigoQRPage implements OnInit, OnDestroy {
   isDisplay = true;
   toggleDisplay(){
     this.isDisplay= !this.isDisplay;
-    console.log(this.nombre);
-    console.log(this.secc);
     this.servicio.registroClases(this.secc,this.nombre,1,this.myDate);
   }
 
@@ -79,16 +77,11 @@ export class CodigoQRPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.servicio.dbState().subscribe((res)=>{
       if(res){
+        this.servicio.fetchSecciones().subscribe((x)=>{
+          this.seccion = x;
+        })
         this.servicio.fetchRamos().subscribe((item)=>{
           this.ramo = item;
-        })
-      }
-    })
-
-    this.servicio.dbState().subscribe((res)=>{
-      if(res){
-        this.servicio.fetchSecciones().subscribe((item)=>{
-          this.seccion = item;
         })
       }
     })

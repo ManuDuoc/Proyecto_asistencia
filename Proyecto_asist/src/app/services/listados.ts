@@ -4,5 +4,6 @@ export class Listados {
     nombre: String;
     id_estudiante: Number;
     id_asignatura: Number;
+    clases : Number;
 
 }

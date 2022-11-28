@@ -50,6 +50,7 @@ export class AsistcarrPage implements OnInit {
   sec : any;
   id_estudiante : any;
   id_asigsecci : any;
+  clases : any;
   nombre : any;
   constructor(private menu: MenuController,public nativeStorage:NativeStorage,private alertController : AlertController,private router : Router ,private activedRouter: ActivatedRoute,private servicio:DbService) {
   }
@@ -58,6 +59,7 @@ export class AsistcarrPage implements OnInit {
   ngOnInit() {
   this.servicio.dbState().subscribe((res)=>{
     if(res){
+      this.servicio.buscarsec()
       this.servicio.fetchsecc().subscribe((item)=>{
         this.seccion = item;
       })
@@ -69,7 +71,8 @@ export class AsistcarrPage implements OnInit {
         this.nombre = this.seccion[i].nombre
         this.id_estudiante = this.seccion[i].id_estudiante
         this.id_asigsecci = this.seccion[i].id_asigsecci
-        console.log(this.sigla,this.sec,this.nombre,this.id_estudiante,this.id_asigsecci)
+        this.clases = this.seccion[i].clases
+        console.log(this.sigla,this.sec,this.nombre,this.id_estudiante,this.id_asigsecci,this.clases)
       }
       }
   })

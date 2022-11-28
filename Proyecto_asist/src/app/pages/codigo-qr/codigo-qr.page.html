@@ -10,7 +10,7 @@
 <ion-content [style.visibility]="content_visibility" color="warning">
   <div class="cont">
     <ion-select placeholder="Seleccione la sección" [(ngModel)]="secc">
-      <ion-select-option *ngFor="let a of seccion" [value]="a.id">{{a.sigla}}</ion-select-option>
+      <ion-select-option *ngFor="let s of seccion" [value]="s.id">{{s.sigla}}</ion-select-option>
     </ion-select>
     <ion-select placeholder="Seleccione el nombre" [(ngModel)]="nombre">
       <ion-select-option *ngFor="let a of ramo" [value]="a.id_ramo">{{a.nombre}}</ion-select-option>
