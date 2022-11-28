@@ -22,6 +22,10 @@ export class MenuAlumnoPage implements OnInit {
   clave: any;
   id_rol: number;
 
+  separar: any[] = [];
+  dia: any;
+  horas: any;
+
   token: any;
   id_clase: number;
   fecha: any;
@@ -152,8 +156,11 @@ export class MenuAlumnoPage implements OnInit {
         }
         }
     })
-      this.servicio.registroAsistido(this.scannedResult,this.id,this.id_seccion,this.id_ramo);
-      console.log(this.scannedResult,this.id_seccion,this.id_ramo,this.fecha )
+      this.separar = this.fecha.split(",");
+      this.dia = this.separar[0];
+      this.horas = this.separar[1];
+      this.servicio.registroAsistido(this.scannedResult,this.horas,this.dia,this.id,this.id_seccion,this.id_ramo);
+      console.log(this.scannedResult,this.id_seccion,this.id_ramo,this.fecha,this.horas,this.dia)
     }
   }
 

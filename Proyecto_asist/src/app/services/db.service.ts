@@ -28,7 +28,7 @@ export class DbService {
   Asistencia: string = "CREATE TABLE IF NOT EXISTS asistencia(id INTEGER PRIMARY KEY autoincrement, id_ramo INTEGER NOT NULL, id_seccion INTEGER  NOT NULL,id_profesor INTEGER NOT NULL, FOREIGN KEY(id_ramo) REFERENCES ramo(id_ramo) on delete cascade on update cascade, FOREIGN KEY(id_seccion) REFERENCES seccion(id) on delete cascade on update cascade,FOREIGN KEY(id_profesor) REFERENCES rol(id) on delete cascade on update cascade);";
   Listado: string = "CREATE TABLE IF NOT EXISTS listado(id INTEGER PRIMARY KEY autoincrement, id_estudiante INTEGER NOT NULL, id_asigsecci INTEGER  NOT NULL,FOREIGN KEY(id_asigsecci) REFERENCES asistencia(id) on delete cascade on update cascade,FOREIGN KEY(id_estudiante) REFERENCES usuario(id) on delete cascade on update cascade);";
   Perfil: string = "CREATE TABLE IF NOT EXISTS perfil(id_perfil INTEGER PRIMARY KEY autoincrement,id_usuario INTEGER NULL,nombre VARCHAR(30) NULL, apellido VARCHAR(30) NULL,edad INTEGER NULL,imagen BLOB NULL,numero INTEGER NULL,correo VARCHAR(30) NULL,ciudad VARCHAR(30) NULL, provincia VARCHAR(30) NULL,FOREIGN KEY(id_usuario) REFERENCES usuario(id) on delete cascade on update cascade);";
-  Asistido: string = "CREATE TABLE IF NOT EXISTS asistido(id INTEGER PRIMARY KEY autoincrement, fecha VARCHAR(60) NOT NULL,id_estudiante INTEGER NOT NULL, id_seccion INTEGER NOT NULL,id_ramo INTEGER NOT NULL,FOREIGN KEY(id_estudiante) REFERENCES usuario(id) on delete cascade on update cascade,FOREIGN KEY(id_seccion) REFERENCES seccion(id) on delete cascade on update cascade,FOREIGN KEY(id_ramo) REFERENCES ramo(id_ramo) on delete cascade on update cascade);";
+  Asistido: string = "CREATE TABLE IF NOT EXISTS asistido(id INTEGER PRIMARY KEY autoincrement, fecha VARCHAR(60) NOT NULL,hora VARCHAR(60) NULL, dia VARCHAR(60) NULL, id_estudiante INTEGER NOT NULL, id_seccion INTEGER NOT NULL,id_ramo INTEGER NOT NULL,FOREIGN KEY(id_estudiante) REFERENCES usuario(id) on delete cascade on update cascade,FOREIGN KEY(id_seccion) REFERENCES seccion(id) on delete cascade on update cascade,FOREIGN KEY(id_ramo) REFERENCES ramo(id_ramo) on delete cascade on update cascade);";
   Clases: string = "CREATE TABLE IF NOT EXISTS clases(id_clase INTEGER PRIMARY KEY autoincrement,  id_seccion INTEGER NOT NULL,id_ramo INTEGER NOT NULL,id_profesor INTEGER  NOT NULL, fecha VARCHAR(60) NOT NULL, FOREIGN KEY(id_seccion) REFERENCES seccion(id) on delete cascade on update cascade, FOREIGN KEY(id_ramo) REFERENCES ramo(id_ramo) on delete cascade on update cascade,FOREIGN KEY(id_profesor) REFERENCES rol(id) on delete cascade on update cascade);";
   //insertar en la tabla rol
   RolProfesor: string = "INSERT or IGNORE INTO rol(id,nombre_rol) VALUES (1,'Profesor');";
@@ -213,7 +213,7 @@ export class DbService {
 
   buscarsec() {
     //ejecuto la consulta
-    return this.database.executeSql("SELECT ramo.sigla AS siglas, seccion.sigla ,ramo.nombre,listado.id_estudiante,listado.id_asigsecci, IFNULL(count(asistido.id_estudiante),'0')*100  / (select count(id_clase) from clases where id_ramo = ramo.id_ramo and id_seccion = seccion.id)  AS clase FROM listado JOIN asistencia ON listado.id_asigsecci = asistencia.id JOIN ramo ON asistencia.id_ramo = ramo.id_ramo JOIN seccion ON asistencia.id_seccion = seccion.id JOIN usuario ON listado.id_estudiante = usuario.id JOIN asistido ON usuario.id = asistido.id_estudiante", []).then(res => {
+    return this.database.executeSql("SELECT ramo.sigla AS siglas, seccion.sigla ,ramo.nombre,listado.id_estudiante,listado.id_asigsecci, IFNULL((select count(id) from asistido where id_ramo = ramo.id_ramo and id_seccion = seccion.id) ,'0')*100  / IFNULL((select count(id_clase) from clases where id_ramo = ramo.id_ramo and id_seccion = seccion.id),'0')  AS clase,IFNULL((select hora from asistido where id_ramo = ramo.id_ramo and id_seccion = seccion.id) ,'no tines horas registradas') AS fecha FROM listado JOIN asistencia ON listado.id_asigsecci = asistencia.id JOIN ramo ON asistencia.id_ramo = ramo.id_ramo JOIN seccion ON asistencia.id_seccion = seccion.id JOIN usuario ON listado.id_estudiante = usuario.id ", []).then(res => {
       //creo el arreglo para los registros
       let items: Listados[] = [];
       //si existen filas
@@ -226,7 +226,8 @@ export class DbService {
             nombre: res.rows.item(i).nombre,
             id_estudiante: res.rows.item(i).id_estudiante,
             id_asignatura: res.rows.item(i).id_asigsecci,
-            clases : res.rows.item(i).clase
+            clases : res.rows.item(i).clase,
+            fecha: res.rows.item(i).fecha
           })
         }
       }
@@ -523,6 +524,8 @@ export class DbService {
           items.push({
             id: res.rows.item(i).id,
             fecha: res.rows.item(i).fecha,
+            hora: res.rows.item(i).hora,
+            dia: res.rows.item(i).dia,
             id_estudiante: res.rows.item(i).id_estudiante,
             id_seccion: res.rows.item(i).id_seccion,
             id_ramo: res.rows.item(i).id_ramo
@@ -534,9 +537,9 @@ export class DbService {
 
     })
   }
-  registroAsistido(fecha,id_estudiante,id_seccion,id_ramo) {
-    let data = [fecha,id_estudiante,id_seccion,id_ramo];
-    return this.database.executeSql('INSERT INTO asistido(fecha,id_estudiante,id_seccion,id_ramo) VALUES (?,?,?,?)', data).then(data2 => {
+  registroAsistido(fecha,hora,dia,id_estudiante,id_seccion,id_ramo) {
+    let data = [fecha,hora,dia,id_estudiante,id_seccion,id_ramo];
+    return this.database.executeSql('INSERT INTO asistido(fecha,hora,dia,id_estudiante,id_seccion,id_ramo) VALUES (?,?,?,?,?,?)', data).then(data2 => {
       this.buscarAsistidos();
       this.presentAlert("Asistencia Registrada");
     })
