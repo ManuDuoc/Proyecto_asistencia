@@ -7,5 +7,7 @@ export class Listados {
     clases : Number;
     fecha : String;
     nom: String;
+    rol: String;
+    id: Number;
 
 }

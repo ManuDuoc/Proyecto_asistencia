@@ -19,6 +19,7 @@ export class ListaAlumnosPage implements OnInit {
   clave: any;
   id_rol: number;
   nombreD: any;
+  nombreX: any;
   nombres: any;
   separar: any[] = [];
   seccion1: any;
@@ -95,5 +96,11 @@ export class ListaAlumnosPage implements OnInit {
   }
   async ingresar(){
   console.log(this.nombreD)
+  this.servicio.modificarUsuario(3,this.nombreD);
   }
+
+  async desbloquar(){
+    console.log(this.nombreX)
+    this.servicio.modificarUsuario(2,this.nombreX);
+    }
 }

@@ -24,6 +24,32 @@ th{
     
 }
 
+.titulo{
+    background: #006583;
+    border: 1px solid black;
+    width: 100%;
+}
+.bloquear{
+    background: #006583;
+    margin-top: 20px;
+    width: 100%;
+    box-shadow: 0 0.2rem 0.3rem rgba(27, 27, 26, 0.89);
+}
+.login-button{
+    width: 100%;
+    margin: auto;
+
+}
+ion-select{
+    background: #006583;
+}
+ion-button {
+    color: black;
+}
+ion-input{
+    color: black;
+    text-align: center;
+}
 tr{
     height: 35px;
     border-width: 1px;

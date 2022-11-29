@@ -34,6 +34,31 @@
       </tr>
       </tbody>
 </table>
+
+<div class="bloquear">
+  <p class="titulo">Bloquear alumno</p>
+  <div class="contenedor">
+  <ion-select placeholder="Seleccione la sección" [(ngModel)]="nombreD">
+    <ng-container *ngFor="let it of seccion">
+    <ion-select-option *ngIf="it.sigla == seccion1 && it.seccion == seccion2 && it.rol == 2" [value]="it.id">{{it.nom}}</ion-select-option>
+    </ng-container>
+  </ion-select>
+  <ion-button size="small" color="medium" class="login-button" (click)="ingresar()">Bloquear</ion-button>
+</div>
+</div>
+
+<div class="bloquear">
+  <p class="titulo">Desbloquear alumno</p>
+  <div class="contenedor">
+  <ion-select placeholder="Seleccione la sección" [(ngModel)]="nombreX">
+    <ng-container *ngFor="let it of seccion">
+    <ion-select-option *ngIf="it.sigla == seccion1 && it.seccion == seccion2 && it.rol == 3" [value]="it.id">{{it.nom}}</ion-select-option>
+    </ng-container>
+  </ion-select>
+  <ion-button size="small" color="medium" class="login-button" (click)="desbloquar()">Desbloquear</ion-button>
+</div>
+</div>
+
 </div>
 <div class="ass"></div>
 </ion-content>
