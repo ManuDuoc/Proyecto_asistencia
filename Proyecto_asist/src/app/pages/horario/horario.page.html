@@ -17,8 +17,9 @@
     </ion-card-title>
   </ion-item>
     <ion-item>
-          <ion-grid *ngFor="let it of seccion">
-            <ion-row *ngIf="it.id_estudiante == id">
+          <ion-grid >
+            <ion-row *ngFor="let it of seccion">
+              <ng-container *ngIf="it.id_estudiante == id">
               <table>
                 <thead>
                   <tr>
@@ -33,6 +34,7 @@
                 </tr>
                   </tbody>
                 </table>
+              </ng-container>
             </ion-row>
           </ion-grid>
         </ion-item>
