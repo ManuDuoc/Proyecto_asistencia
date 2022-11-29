@@ -14,8 +14,9 @@
     <ion-select placeholder="Seleccione la sección" [(ngModel)]="nombres">
       <ion-select-option *ngFor="let it of seccion" [value]="it.sigla +' '+ it.seccion +' '+ it.nombre">{{it.sigla}} {{it.seccion}}</ion-select-option>
     </ion-select>
-    <ion-button (click)="et()"><ion-icon name="phone-portrait-outline"></ion-icon></ion-button>
-    <ion-button [routerLink]="'/asistencia'"><ion-icon name="clipboard-outline"></ion-icon></ion-button>
+    <div class="boton">
+    <ion-button  (click)="et()">Lista <ion-icon name="clipboard-outline"></ion-icon></ion-button>
+  </div>
   </ion-list-header>
 
 </ion-content>

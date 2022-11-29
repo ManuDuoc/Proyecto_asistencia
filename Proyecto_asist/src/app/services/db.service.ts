@@ -158,41 +158,16 @@ export class DbService {
     return this.listaclases.asObservable();
   }
 
-  fetchAsig(): Observable<CountClases[]> {
+  fetchRamoss(): Observable<CountAsistencia[]> {
     return this.listaAsig.asObservable();
   }
 
-  fetchTencia(): Observable<CountAsistencia[]> {
-    return this.listaTencia.asObservable();
-  }
 
 
-  buscarAsigs(id_seccion, id_ramo) {
-    let data = [id_seccion, id_ramo]; 
+
+  listasramo() {
     //ejecuto la consulta
-    return this.database.executeSql('SELECT count(id_clase) FROM clases WHERE id_seccion = ? and id_ramo = ? ', data).then(res => {
-      //creo el arreglo para los registros
-      let items: CountClases[] = [];
-      //si existen filas
-      if (res.rows.length > 0) {
-        //recorro el cursor y lo agrego al arreglo
-        for (var i = 0; i < res.rows.length; i++) {
-          items.push({
-            contador: res.rows.item(i).id_clase
-          })
-          this.presentAlert("Datos: " + items[i].contador);
-        }
-      }
-      //actualizo el observable
-      this.listaAsig.next(items);
-
-    })
-  }
-
-  buscarTencia(id_seccion, id_ramo) {
-    let data = [id_seccion, id_ramo]; 
-    //ejecuto la consulta
-    return this.database.executeSql('SELECT count(id) FROM asistido WHERE id_seccion = ? and id_ramo = ? ', data).then(res => {
+    return this.database.executeSql("SELECT ramo.id_ramo AS idramo,ramo.sigla AS siglas,seccion.id AS id, seccion.sigla ,ramo.nombre FROM asistencia JOIN ramo ON asistencia.id_ramo = ramo.id_ramo JOIN seccion ON asistencia.id_seccion = seccion.id ", []).then(res => {
       //creo el arreglo para los registros
       let items: CountAsistencia[] = [];
       //si existen filas
@@ -200,9 +175,12 @@ export class DbService {
         //recorro el cursor y lo agrego al arreglo
         for (var i = 0; i < res.rows.length; i++) {
           items.push({
-            contarAsist: res.rows.item(i).id
+            idramo: res.rows.item(i).idramo,
+            sigla: res.rows.item(i).siglas,
+            id: res.rows.item(i).id,
+            seccion: res.rows.item(i).sigla,
+            nombre: res.rows.item(i).nombre
           })
-          this.presentAlert("Datos: " + items[i].contarAsist);
         }
       }
       //actualizo el observable
@@ -213,7 +191,7 @@ export class DbService {
 
   buscarsec() {
     //ejecuto la consulta
-    return this.database.executeSql("SELECT ramo.sigla AS siglas, seccion.sigla ,ramo.nombre,listado.id_estudiante,listado.id_asigsecci, IFNULL((select count(id) from asistido where id_ramo = ramo.id_ramo and id_seccion = seccion.id) ,'0')*100  / IFNULL((select count(id_clase) from clases where id_ramo = ramo.id_ramo and id_seccion = seccion.id),'0')  AS clase,IFNULL((select hora from asistido where id_ramo = ramo.id_ramo and id_seccion = seccion.id) ,'no tines horas registradas') AS fecha,IFNULL((select nombre from perfil where id_perfil = usuario.id ) ,usuario.nombre) AS nom , usuario.id_rol AS rol ,usuario.id AS id FROM listado JOIN asistencia ON listado.id_asigsecci = asistencia.id JOIN ramo ON asistencia.id_ramo = ramo.id_ramo JOIN seccion ON asistencia.id_seccion = seccion.id JOIN usuario ON listado.id_estudiante = usuario.id ", []).then(res => {
+    return this.database.executeSql("SELECT ramo.sigla AS siglas, seccion.sigla ,ramo.nombre,listado.id_estudiante,listado.id_asigsecci, IFNULL((select count(id) from asistido where id_ramo = ramo.id_ramo and id_seccion = seccion.id and id_estudiante = usuario.id) ,'0')*100  / IFNULL((select count(id_clase) from clases where id_ramo = ramo.id_ramo and id_seccion = seccion.id),'0')  AS clase,IFNULL((select hora from asistido where id_ramo = ramo.id_ramo and id_seccion = seccion.id) ,'no tines horas registradas') AS fecha,IFNULL((select nombre ||' '|| apellido from perfil where id_perfil = usuario.id ) ,usuario.nombre) AS nom , usuario.id_rol AS rol ,usuario.id AS id FROM listado JOIN asistencia ON listado.id_asigsecci = asistencia.id JOIN ramo ON asistencia.id_ramo = ramo.id_ramo JOIN seccion ON asistencia.id_seccion = seccion.id JOIN usuario ON listado.id_estudiante = usuario.id ", []).then(res => {
       //creo el arreglo para los registros
       let items: Listados[] = [];
       //si existen filas

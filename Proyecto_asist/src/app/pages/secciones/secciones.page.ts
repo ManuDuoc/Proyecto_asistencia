@@ -40,22 +40,11 @@ export class SeccionesPage implements OnInit {
   ngOnInit() {
     this.servicio.dbState().subscribe((res)=>{
       if(res){
-        this.servicio.buscarsec()
-        this.servicio.fetchsecc().subscribe((item)=>{
-          this.seccion = item;
+        this.servicio.listasramo()
+        this.servicio.fetchRamoss().subscribe((item)=>{
+        this.seccion = item;
         })
       }
-      for (let i = 0; i < this.seccion.length; i++) {
-        if(this.seccion[i].id_estudiante == 2  ){
-          this.sigla = this.seccion[i].sigla
-          this.sec = this.seccion[i].seccion
-          this.nombre = this.seccion[i].nombre
-          this.id_estudiante = this.seccion[i].id_estudiante
-          this.id_asigsecci = this.seccion[i].id_asigsecci
-          this.clases = this.seccion[i].clases
-          console.log(this.sigla,this.sec,this.nombre,this.id_estudiante,this.id_asigsecci,this.clases)
-        }
-        }
     })
   }
 

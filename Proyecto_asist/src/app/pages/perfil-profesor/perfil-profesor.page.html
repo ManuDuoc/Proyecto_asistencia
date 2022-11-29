@@ -32,21 +32,29 @@
   <ion-list>
     <ion-item color="warning">
       <ion-label>
-        <ion-text >Nombre</ion-text>
-        <p><ion-text color="primary" te>{{nombre_p}}</ion-text></p>
+        <ion-text >Nombre usuario</ion-text>
+        <p><ion-text color="primary">{{nombre_p}}</ion-text></p>
       </ion-label>
       <ion-icon (click)="ti()" slot="end" name="create"></ion-icon>
+    </ion-item>
+    <ion-item color="warning">
+      <ion-label>
+        <ion-text >Nombre y apellido</ion-text>
+        <p><ion-text color="primary" >{{nombre}} {{apellido}}</ion-text></p>
+      </ion-label>
     </ion-item>
     <ion-item  color="warning">
       <ion-label>
         <ion-text>Email</ion-text>
-        <p><ion-text color="primary">{{nombre}}</ion-text></p>
+        <p><ion-text color="primary">{{correo}}</ion-text></p>
       </ion-label>
     </ion-item>
-    <ion-item  color="warning">
+    <ion-item color="warning">
       <ion-label>
+        <ng-container>
         <ion-text>Telefono</ion-text>
-        <p><ion-text color="primary">{{numero}}</ion-text></p>
+        <p><ion-text color="primary"></ion-text>{{numero}}</p>
+      </ng-container>
       </ion-label>
     </ion-item>
   </ion-list>

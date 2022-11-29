@@ -1,3 +1,7 @@
 export class CountAsistencia {
-    contarAsist:Number;
+    idramo: Number;
+    sigla : String;
+    id : Number;
+    seccion: String;
+    nombre: String;
 }
